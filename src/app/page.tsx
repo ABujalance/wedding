@@ -1,10 +1,5 @@
-import { CountDown } from "@/components/CountDown";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      <h1>Vaya bodón</h1>
-      <CountDown />
-    </div>
-  );
+  redirect(`/save-the-date`);
 }
