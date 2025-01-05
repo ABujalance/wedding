@@ -1,3 +1,10 @@
+import { CountDown } from "@/components/CountDown";
+
 export default function Home() {
-  return <h1>Vaya bodón</h1>;
+  return (
+    <div>
+      <h1>Vaya bodón</h1>
+      <CountDown />
+    </div>
+  );
 }
