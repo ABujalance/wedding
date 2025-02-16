@@ -1,7 +1,11 @@
 "use client";
 import { WEDDING_DATE } from "@/util/constants/time";
-import { Stack, Typography } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { FC, useEffect, useState } from "react";
+import { NumberBox } from "./NumberBox";
+
+const paddedNumber = (number: number, pad: number) =>
+  String(number).padStart(pad, "0");
 
 export const CountDown: FC = () => {
   const [remainingTime, setRemainingTime] = useState<number>(
@@ -36,12 +40,31 @@ export const CountDown: FC = () => {
 
   return (
     <Stack>
-      <Typography variant="h3">CountDown</Typography>
-      <Stack direction="row" gap="8px">
-        <Typography variant="h3">{days} Days</Typography>
-        <Typography variant="h3">
-          {hours}:{minutes}:{seconds}
-        </Typography>
+      <Stack
+        direction="row"
+        gap={2}
+        justifyContent="center"
+        alignContent="center"
+      >
+        <NumberBox number={paddedNumber(days, 3)} label="DÍAS" />
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ borderColor: "white" }}
+        />
+        <NumberBox number={paddedNumber(hours, 2)} label="HORAS" />
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ borderColor: "white" }}
+        />
+        <NumberBox number={paddedNumber(minutes, 2)} label="MINUTOS" />
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ borderColor: "white" }}
+        />
+        <NumberBox number={paddedNumber(seconds, 2)} label="SEGUNDOS" />
       </Stack>
     </Stack>
   );
