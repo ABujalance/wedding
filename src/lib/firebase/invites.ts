@@ -13,7 +13,8 @@ const COLLECTION_NAME = 'invites';
 
 export interface Invite {
   id: string;
-  displayName?: string;
+  displayName: string;
+  notes?: string;
 }
 
 function mapInvite(
@@ -25,8 +26,12 @@ function mapInvite(
   if (!data) {
     return null;
   }
-  const mappedDoc: Invite = { id: doc.id, displayName: data.displayName };
-  return mappedDoc;
+
+  return {
+    id: doc.id,
+    displayName: data.displayName,
+    notes: data.notes,
+  };
 }
 
 export async function getInvites(): Promise<(Invite | null)[]> {

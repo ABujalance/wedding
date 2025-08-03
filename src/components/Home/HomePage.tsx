@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { Invite } from '@/lib/firebase/invites';
+import { InviteScreen } from './Invite/InviteScreen';
 
 export const HomePage: FC = ({}) => {
   const [invite, setInvite] = useState<Invite>();
@@ -20,7 +21,7 @@ export const HomePage: FC = ({}) => {
     setLoading(true);
     setError('');
     try {
-      const inviteReq = await fetch(`api/invites?inviteId=${inviteId}`);
+      const inviteReq = await fetch(`api/invites/${inviteId}`);
       const invite = (await inviteReq.json()) as Invite | null;
       if (!invite) {
         setError('El número introducido no existe, inténtalo de nuevo');
@@ -41,11 +42,7 @@ export const HomePage: FC = ({}) => {
   }
 
   if (invite) {
-    return (
-      <Stack sx={{ color: 'black' }}>
-        <Typography> Bienvenido {invite.displayName}</Typography>
-      </Stack>
-    );
+    return <InviteScreen invite={invite} />;
   }
 
   return (
