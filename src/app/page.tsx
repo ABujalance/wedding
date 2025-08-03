@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { HomePage } from '@/components/Home/HomePage';
 
-export default function Home() {
-  redirect(`/save-the-date`);
+export default async function Home() {
+  return <HomePage />;
 }
