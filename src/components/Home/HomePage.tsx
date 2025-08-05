@@ -46,26 +46,37 @@ export const HomePage: FC = ({}) => {
   }
 
   return (
-    <Stack sx={{ color: 'black' }} gap={1}>
-      <Typography>HOLA</Typography>
-      <TextField
-        slotProps={{ htmlInput: { maxLength: 10 } }}
-        error={Boolean(error)}
-        helperText={error}
-        sx={{ maxWidth: '350px' }}
-        label="Añade tu invitación"
-        value={inviteId}
-        placeholder="0000000000"
-        onChange={(ev) => setInviteId(ev.target.value)}
-      />
-      <Button
-        sx={{ maxWidth: '350px' }}
-        variant="contained"
-        disabled={!inviteId || inviteId.length !== 10}
-        onClick={onInviteAccess}
-      >
-        Acceder
-      </Button>
+    <Stack
+      sx={{
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Stack paddingX="200px" height="100%" paddingY="60px">
+        <Stack gap={1}>
+          <Typography>HOLA</Typography>
+          <TextField
+            slotProps={{ htmlInput: { maxLength: 10 } }}
+            error={Boolean(error)}
+            helperText={error}
+            sx={{ maxWidth: '350px' }}
+            label="Añade tu invitación"
+            value={inviteId}
+            placeholder="0000000000"
+            onChange={(ev) => setInviteId(ev.target.value)}
+          />
+          <Button
+            sx={{ maxWidth: '350px' }}
+            variant="contained"
+            disabled={!inviteId || inviteId.length !== 10}
+            onClick={onInviteAccess}
+          >
+            Acceder
+          </Button>
+        </Stack>
+      </Stack>
     </Stack>
   );
 };

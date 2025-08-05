@@ -1,13 +1,6 @@
 'use client';
 import { Guest } from '@/lib/firebase/guest';
-import { Cancel, Edit, Save } from '@mui/icons-material';
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridRowId,
-  GridRowModes,
-  GridRowModesModel,
-} from '@mui/x-data-grid';
+import { DataGrid, GridRowModesModel } from '@mui/x-data-grid';
 import { FC, useState } from 'react';
 
 type GuestListProps = { guests: Guest[] };

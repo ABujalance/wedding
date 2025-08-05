@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   QueryDocumentSnapshot,
+  setDoc,
   where,
 } from 'firebase/firestore';
 import { firebaseDB } from './firebaseConfig';
@@ -68,6 +69,36 @@ export async function getGuest(guestId: string): Promise<Guest | null> {
   const guestSnapshot = await getDoc(docRef);
   console.log({ guestSnapshot });
   return mapGuest(guestSnapshot);
+}
+
+export async function updateGuest(guest: Guest): Promise<void> {
+  const docRef = guestDoc(guest.id);
+  await setDoc(
+    docRef,
+    {
+      fullName: guest.fullName,
+      allergies: guest.allergies,
+      busOrigin: guest.busOrigin,
+      confirmed: guest.confirmed,
+      isChild: guest.isChild,
+      lastUpdate: new Date(),
+    },
+    { merge: true },
+  );
+}
+
+export async function createGuest(
+  guest: Omit<Guest, 'id' | 'lastUpdate'>,
+): Promise<Guest> {
+  const newGuestRef = doc(guestsCol);
+  const newGuest: Guest = {
+    id: newGuestRef.id,
+    lastUpdate: new Date(),
+    ...guest,
+  };
+
+  await setDoc(newGuestRef, newGuest, { merge: true });
+  return newGuest;
 }
 
 function guestDoc(guestId: string) {

@@ -1,5 +1,5 @@
-import { HomePage } from '@/components/Home/HomePage';
+import { HomePageContainer } from '@/components/Home/HomePageContainer';
 
 export default async function Home() {
-  return <HomePage />;
+  return <HomePageContainer />;
 }

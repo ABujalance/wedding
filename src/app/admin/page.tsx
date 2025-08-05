@@ -11,8 +11,6 @@ interface AdminPageProps {
 export default async function Admin({ searchParams }: AdminPageProps) {
   const adminTokenId = await searchParams?.adminTokenId;
 
-  console.log({ adminTokenId });
-
   if (process.env.ADMIN_TOKEN_ID !== adminTokenId) {
     redirect('/');
   }
