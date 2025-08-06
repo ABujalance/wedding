@@ -33,10 +33,45 @@ export const ShiningText: FC<ShiningTextProps> = ({
 }) => {
   const [scrollY, setScrollY] = useState(0);
   const [deviceTilt, setDeviceTilt] = useState(0);
+  const [isDebugMode, setIsDebugMode] = useState(false);
+
+  // Check if debug mode is enabled via environment variable
+  const isDebugEnabled = process.env.NEXT_PUBLIC_ENABLE_DEBUG_MODE === 'true';
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
+    };
+
+    // Enable debug mode with 'd' key for laptop testing (only if env var is set)
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if ((event.key === 'd' || event.key === 'D') && isDebugEnabled) {
+        setIsDebugMode((prev) => !prev);
+      }
+    };
+
+    // Mouse movement simulation for laptop testing
+    const handleMouseMove = (event: MouseEvent) => {
+      if (isDebugMode) {
+        // Simulate tilt based on mouse position
+        const rect = document.body.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Calculate "tilt" from mouse position
+        const mouseX = event.clientX - centerX;
+        const mouseY = event.clientY - centerY;
+
+        // Normalize to similar range as device orientation
+        const simulatedGamma = (mouseX / centerX) * 90; // -90 to 90
+        const simulatedBeta = (mouseY / centerY) * 90; // -90 to 90
+
+        const gammaContribution = (simulatedGamma + 90) * 5;
+        const betaContribution = (simulatedBeta + 90) * 3;
+        const simulatedTilt = gammaContribution + betaContribution;
+
+        setDeviceTilt(simulatedTilt);
+      }
     };
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
@@ -45,8 +80,8 @@ export const ShiningText: FC<ShiningTextProps> = ({
       if (event.gamma !== null && event.beta !== null) {
         // gamma ranges from -90 to 90, beta ranges from -180 to 180
         // Combine both axes for more natural tilting experience
-        const gammaContribution = (event.gamma + 90) * 2; // 0-360 range
-        const betaContribution = (event.beta + 90) * 1.5; // -45 to 315 range (scaled down)
+        const gammaContribution = (event.gamma + 90) * 5; // 0-900 range (faster than before)
+        const betaContribution = (event.beta + 90) * 3; // Better response for up/down tilt
         const normalizedTilt = gammaContribution + betaContribution;
         setDeviceTilt(normalizedTilt);
       }
@@ -56,8 +91,16 @@ export const ShiningText: FC<ShiningTextProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial call
 
+    // Add keyboard listener for debug mode
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Add mouse listener for debug mode simulation
+    if (isDebugMode) {
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    }
+
     // Add device orientation listener for mobile
-    if (window.DeviceOrientationEvent) {
+    if (window.DeviceOrientationEvent && !isDebugMode) {
       window.addEventListener('deviceorientation', handleOrientation, {
         passive: true,
       });
@@ -65,11 +108,13 @@ export const ShiningText: FC<ShiningTextProps> = ({
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('mousemove', handleMouseMove);
       if (window.DeviceOrientationEvent) {
         window.removeEventListener('deviceorientation', handleOrientation);
       }
     };
-  }, []);
+  }, [isDebugMode, isDebugEnabled]);
 
   // Calculate background position based on scroll and device tilt
   const getBackgroundPosition = () => {
@@ -89,6 +134,31 @@ export const ShiningText: FC<ShiningTextProps> = ({
     <>
       <style>{shineKeyframes}</style>
       <div style={{ position: 'relative', display: 'inline-block' }}>
+        {/* Debug overlay */}
+        {isDebugMode && isDebugEnabled && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '10px',
+              right: '10px',
+              background: 'rgba(0,0,0,0.8)',
+              color: 'white',
+              padding: '10px',
+              borderRadius: '5px',
+              fontSize: '12px',
+              zIndex: 9999,
+              fontFamily: 'monospace',
+            }}
+          >
+            <div>🔧 Debug Mode Active</div>
+            <div>Press &apos;D&apos; to toggle</div>
+            <div>Move mouse to simulate tilt</div>
+            <div>ScrollY: {Math.round(scrollY)}</div>
+            <div>DeviceTilt: {Math.round(deviceTilt)}</div>
+            <div>Combined: {Math.round(scrollY + deviceTilt)}</div>
+          </div>
+        )}
+
         {/* Base text */}
         <Typography
           {...typographyProps}
