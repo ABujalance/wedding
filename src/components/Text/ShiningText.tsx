@@ -7,11 +7,9 @@ import { FC, useEffect, useState } from 'react';
 
 interface ShiningTextProps extends Omit<TypographyProps, 'sx'> {
   children: React.ReactNode;
-  animationType?: 'scroll' | 'time'; // Type of animation
-  duration?: number; // Duration in seconds for time-based animation
   backgroundSize?: number; // Size of the shine effect in pixels
   angle?: number; // Angle of the shine gradient (-40deg default)
-  intensity?: number; // Controls how much scroll affects the animation (0-1)
+  intensity?: number; // Controls how much scroll/tilt affects the animation (0-1)
   scrollSpeed?: number; // Speed multiplier for scroll-based animation (default: 2)
   shineWidth?: number; // Width of the shine effect (1-20, default: 12)
   shineBlur?: number; // Blur/softness of the shine edges (1-30, default: 15)
@@ -22,8 +20,6 @@ interface ShiningTextProps extends Omit<TypographyProps, 'sx'> {
 
 export const ShiningText: FC<ShiningTextProps> = ({
   children,
-  animationType = 'scroll',
-  duration = 5,
   backgroundSize = 400, // Aumentado para cubrir mejor textos largos
   angle = -40,
   intensity = 1,
@@ -36,69 +32,54 @@ export const ShiningText: FC<ShiningTextProps> = ({
   ...typographyProps
 }) => {
   const [scrollY, setScrollY] = useState(0);
+  const [deviceTilt, setDeviceTilt] = useState(0);
 
   useEffect(() => {
-    if (animationType === 'scroll') {
-      const handleScroll = () => {
-        setScrollY(window.scrollY);
-      };
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll(); // Initial call
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      // Use gamma (left-right tilt) for horizontal movement effect
+      // Normalize the value to work similar to scroll
+      if (event.gamma !== null) {
+        // gamma ranges from -90 to 90, we'll map it to scroll-like values
+        const normalizedTilt = (event.gamma + 90) * 10; // Convert to 0-1800 range
+        setDeviceTilt(normalizedTilt);
+      }
+    };
 
-      return () => window.removeEventListener('scroll', handleScroll);
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial call
+
+    // Add device orientation listener for mobile
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleOrientation, {
+        passive: true,
+      });
     }
-  }, [animationType]);
 
-  // Calculate background position based on animation type
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (window.DeviceOrientationEvent) {
+        window.removeEventListener('deviceorientation', handleOrientation);
+      }
+    };
+  }, []);
+
+  // Calculate background position based on scroll and device tilt
   const getBackgroundPosition = () => {
-    if (animationType === 'time') {
-      return undefined; // Let CSS animation handle it
-    } else {
-      // Scroll-based: ensure the shine travels completely across the text
-      const totalWidth = backgroundSize * 3; // Wider background for full coverage
-      const scrollProgress = scrollY * intensity * scrollSpeed;
-      const position = -backgroundSize + (scrollProgress % totalWidth);
-      return `${position}px 0`;
-    }
+    // Combine scroll and device tilt for the animation
+    const combinedPosition = scrollY + deviceTilt;
+    const totalWidth = backgroundSize * 3; // Wider background for full coverage
+    const scrollProgress = combinedPosition * intensity * scrollSpeed;
+    const position = -backgroundSize + (scrollProgress % totalWidth);
+    return `${position}px 0`;
   };
 
   const shineKeyframes = `
-    @keyframes shine {
-      0% {
-        background-position: -${backgroundSize}px 0;
-      }
-      100% {
-        background-position: ${backgroundSize * 3}px 0;
-      }
-    }
-    
-    @keyframes shine-secondary {
-      0% {
-        background-position: ${backgroundSize * 2}px 0;
-      }
-      100% {
-        background-position: -${backgroundSize}px 0;
-      }
-    }
-    
-    @keyframes shine-accent {
-      0% {
-        background-position: -${backgroundSize * 0.5}px 0;
-      }
-      100% {
-        background-position: ${backgroundSize * 2.5}px 0;
-      }
-    }
-    
-    @keyframes shine-shadow {
-      0% {
-        background-position: ${backgroundSize * 1.5}px 0;
-      }
-      100% {
-        background-position: -${backgroundSize * 1.5}px 0;
-      }
-    }
+    /* Keyframes removed since we're only using scroll/tilt-based positioning */
   `;
 
   return (
@@ -143,15 +124,9 @@ export const ShiningText: FC<ShiningTextProps> = ({
             pointerEvents: 'none',
             zIndex: 3,
 
-            // Animation based on type
-            ...(animationType === 'time'
-              ? {
-                  animation: `shine ${duration}s infinite linear`,
-                }
-              : {
-                  backgroundPosition: getBackgroundPosition(),
-                  transition: 'background-position 0.1s ease-out',
-                }),
+            // Animation based on scroll and device tilt
+            backgroundPosition: getBackgroundPosition(),
+            transition: 'background-position 0.1s ease-out',
           }}
         >
           {children}
@@ -183,19 +158,11 @@ export const ShiningText: FC<ShiningTextProps> = ({
             opacity: 0.6,
 
             // Different animation timing for irregular effect
-            ...(animationType === 'time'
-              ? {
-                  animation: `shine-secondary ${
-                    duration * 1.3
-                  }s infinite linear`,
-                }
-              : {
-                  backgroundPosition: `${
-                    (scrollY * intensity * scrollSpeed * 0.7) %
-                    (backgroundSize * 2)
-                  }px 0`,
-                  transition: 'background-position 0.15s ease-out',
-                }),
+            backgroundPosition: `${
+              ((scrollY + deviceTilt) * intensity * scrollSpeed * 0.7) %
+              (backgroundSize * 2)
+            }px 0`,
+            transition: 'background-position 0.15s ease-out',
           }}
         >
           {children}
@@ -228,17 +195,11 @@ export const ShiningText: FC<ShiningTextProps> = ({
             opacity: 0.4,
 
             // Fastest animation for sparkle effect
-            ...(animationType === 'time'
-              ? {
-                  animation: `shine-accent ${duration * 0.8}s infinite linear`,
-                }
-              : {
-                  backgroundPosition: `${
-                    (scrollY * intensity * scrollSpeed * 1.5) %
-                    (backgroundSize * 2.5)
-                  }px 0`,
-                  transition: 'background-position 0.08s ease-out',
-                }),
+            backgroundPosition: `${
+              ((scrollY + deviceTilt) * intensity * scrollSpeed * 1.5) %
+              (backgroundSize * 2.5)
+            }px 0`,
+            transition: 'background-position 0.08s ease-out',
           }}
         >
           {children}
@@ -271,18 +232,12 @@ export const ShiningText: FC<ShiningTextProps> = ({
             opacity: 0.3,
 
             // Slower, opposite direction for depth
-            ...(animationType === 'time'
-              ? {
-                  animation: `shine-shadow ${duration * 1.6}s infinite linear`,
-                }
-              : {
-                  backgroundPosition: `${
-                    backgroundSize -
-                    ((scrollY * intensity * scrollSpeed * 0.5) %
-                      (backgroundSize * 3))
-                  }px 0`,
-                  transition: 'background-position 0.2s ease-out',
-                }),
+            backgroundPosition: `${
+              backgroundSize -
+              (((scrollY + deviceTilt) * intensity * scrollSpeed * 0.5) %
+                (backgroundSize * 3))
+            }px 0`,
+            transition: 'background-position 0.2s ease-out',
           }}
         >
           {children}
