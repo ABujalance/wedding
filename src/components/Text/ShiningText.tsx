@@ -40,11 +40,14 @@ export const ShiningText: FC<ShiningTextProps> = ({
     };
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
-      // Use gamma (left-right tilt) for horizontal movement effect
-      // Normalize the value to work similar to scroll
-      if (event.gamma !== null) {
-        // gamma ranges from -90 to 90, we'll map it to scroll-like values
-        const normalizedTilt = (event.gamma + 90) * 10; // Convert to 0-1800 range
+      // Use both gamma (left-right tilt) and beta (up-down tilt) for more natural movement
+      // Normalize the values to work similar to scroll
+      if (event.gamma !== null && event.beta !== null) {
+        // gamma ranges from -90 to 90, beta ranges from -180 to 180
+        // Combine both axes for more natural tilting experience
+        const gammaContribution = (event.gamma + 90) * 2; // 0-360 range
+        const betaContribution = (event.beta + 90) * 1.5; // -45 to 315 range (scaled down)
+        const normalizedTilt = gammaContribution + betaContribution;
         setDeviceTilt(normalizedTilt);
       }
     };
