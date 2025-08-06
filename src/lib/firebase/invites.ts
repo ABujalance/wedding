@@ -43,7 +43,6 @@ export async function getInvites(): Promise<(Invite | null)[]> {
 export async function getInvite(inviteId: string): Promise<Invite | null> {
   const docRef = inviteDoc(inviteId);
   const inviteSnapshot = await getDoc(docRef);
-  console.log({ inviteSnapshot });
   return mapInvite(inviteSnapshot);
 }
 

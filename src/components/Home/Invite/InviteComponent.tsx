@@ -14,7 +14,6 @@ export const InviteComponent: FC<InviteComponentProps> = ({
   guestsPromise,
 }) => {
   const guests = use(guestsPromise);
-  console.log(guests);
   return (
     <Stack sx={{ color: 'black' }} gap={2}>
       <Stack gap={1}>

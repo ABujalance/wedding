@@ -1,49 +1,16 @@
 'use client';
 
-import {
-  Button,
-  CircularProgress,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { FC, useState } from 'react';
-import { Invite } from '@/lib/firebase/invites';
-import { InviteScreen } from './Invite/InviteScreen';
+import BackgroundImage from '@/assets/images/paper.png';
+import WreathImage from '@/assets/images/wreath.png';
+import { Box, Stack, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
+import { FC } from 'react';
+import { InviteForm } from './Invite/InviteForm';
 
 export const HomePage: FC = ({}) => {
-  const [invite, setInvite] = useState<Invite>();
-  const [inviteId, setInviteId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const onInviteAccess = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const inviteReq = await fetch(`api/invites/${inviteId}`);
-      const invite = (await inviteReq.json()) as Invite | null;
-      if (!invite) {
-        setError('El número introducido no existe, inténtalo de nuevo');
-        return;
-      }
-      setInvite(invite);
-    } catch {
-      setError(
-        'Ha habido un error con tu solicitud. Asegurate que tu número es correcto',
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (invite) {
-    return <InviteScreen invite={invite} />;
-  }
+  const is600Px = useMediaQuery('(min-width: 600px)');
+  const is900Px = useMediaQuery('(min-width: 900px)');
+  const is1500Px = useMediaQuery('(min-width: 1500px)');
 
   return (
     <Stack
@@ -54,28 +21,59 @@ export const HomePage: FC = ({}) => {
         justifyContent: 'center',
       }}
     >
-      <Stack paddingX="200px" height="100%" paddingY="60px">
-        <Stack gap={1}>
-          <Typography>HOLA</Typography>
-          <TextField
-            slotProps={{ htmlInput: { maxLength: 10 } }}
-            error={Boolean(error)}
-            helperText={error}
-            sx={{ maxWidth: '350px' }}
-            label="Añade tu invitación"
-            value={inviteId}
-            placeholder="0000000000"
-            onChange={(ev) => setInviteId(ev.target.value)}
+      <Stack
+        marginBottom="50px"
+        marginTop={
+          is1500Px ? '200px' : is900Px ? '150px' : is600Px ? '100px' : '50px'
+        }
+        borderRadius="16px"
+        sx={{
+          width: is1500Px
+            ? '1200px'
+            : is900Px
+            ? '800px'
+            : is600Px
+            ? '550px'
+            : '350px',
+          background: `url(${BackgroundImage.src}) `,
+          position: 'relative',
+          overflow: 'visible',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '120%',
+            top: is1500Px
+              ? '-200px'
+              : is900Px
+              ? '-150px'
+              : is600Px
+              ? '-100px'
+              : '-50px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <Image
+            src={WreathImage.src}
+            alt="Wreath"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style={{ height: 'auto', width: '100%', position: 'relative' }}
           />
-          <Button
-            sx={{ maxWidth: '350px' }}
-            variant="contained"
-            disabled={!inviteId || inviteId.length !== 10}
-            onClick={onInviteAccess}
-          >
-            Acceder
-          </Button>
-        </Stack>
+        </Box>
+        <Box
+          padding="20px"
+          paddingTop={
+            is1500Px ? '350px' : is900Px ? '200px' : is600Px ? '150px' : '125px'
+          }
+          minHeight="100vh"
+          paddingX="20%"
+        >
+          <InviteForm />
+        </Box>
       </Stack>
     </Stack>
   );

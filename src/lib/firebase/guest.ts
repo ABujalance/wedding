@@ -67,7 +67,6 @@ export async function getAllGuests(): Promise<Guest[]> {
 export async function getGuest(guestId: string): Promise<Guest | null> {
   const docRef = guestDoc(guestId);
   const guestSnapshot = await getDoc(docRef);
-  console.log({ guestSnapshot });
   return mapGuest(guestSnapshot);
 }
 
