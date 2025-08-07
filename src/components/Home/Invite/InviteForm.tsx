@@ -1,6 +1,6 @@
 import { ShiningText } from '@/components/Text/ShiningText';
 import { Invite } from '@/lib/firebase/invites';
-import { CircularProgress, Stack, useMediaQuery } from '@mui/material';
+import { Stack, useMediaQuery } from '@mui/material';
 import { FC, useState } from 'react';
 import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
@@ -15,17 +15,12 @@ export const InviteForm: FC = () => {
   const is900Px = useMediaQuery('(min-width: 900px)');
   const is600Px = useMediaQuery('(min-width: 600px)');
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
   if (invite) {
     return <InviteScreen invite={invite} />;
   }
 
   const onInviteAccess = async () => {
     setLoading(true);
-    setError('');
     try {
       const inviteReq = await fetch(`api/invites/${inviteId}`);
       const invite = (await inviteReq.json()) as Invite | null;
@@ -33,6 +28,7 @@ export const InviteForm: FC = () => {
         setError('El número introducido no existe, inténtalo de nuevo');
         return;
       }
+      setError('');
       setInvite(invite);
     } catch {
       setError(

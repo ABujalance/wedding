@@ -4,6 +4,7 @@ import {
   TextField,
   InputAdornment,
   useMediaQuery,
+  CircularProgress,
 } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
@@ -142,7 +143,14 @@ export const InviteInput: FC<InviteInputProps> = ({
         disabled={!inviteId || inviteId.length !== 10 || loading}
         onClick={onInviteAccess}
       >
-        Acceder
+        {loading ? (
+          <CircularProgress
+            size={24}
+            sx={{ color: 'rgba(101, 67, 33, 0.8)' }}
+          />
+        ) : (
+          'Acceder'
+        )}
       </Button>
     </Stack>
   );

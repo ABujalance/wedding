@@ -1,7 +1,7 @@
 import { Invite } from '@/lib/firebase/invites';
-import { CircularProgress } from '@mui/material';
 import { FC, Suspense } from 'react';
 import { InviteComponent } from './InviteComponent';
+import { InviteSkeleton } from './InviteSkeleton';
 import { Guest } from '@/lib/firebase/guest';
 
 type InviteScreenProps = {
@@ -17,7 +17,7 @@ const fetchGuestData = async (inviteId: string) => {
 export const InviteScreen: FC<InviteScreenProps> = ({ invite }) => {
   const guestsPromise = fetchGuestData(invite.id);
   return (
-    <Suspense fallback={<CircularProgress />}>
+    <Suspense fallback={<InviteSkeleton />}>
       <InviteComponent invite={invite} guestsPromise={guestsPromise} />
     </Suspense>
   );
