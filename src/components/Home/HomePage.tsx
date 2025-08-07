@@ -1,7 +1,7 @@
 'use client';
 
 import BackgroundImage from '@/assets/images/paper.png';
-import WreathImage from '@/assets/images/wreath.png';
+import WreathImage from '@/assets/images/wreath-opaque.png';
 import { Box, Stack, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import { FC } from 'react';

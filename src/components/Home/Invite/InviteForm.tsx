@@ -11,6 +11,7 @@ export const InviteForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const is1500Px = useMediaQuery('(min-width: 1500px)');
   const is900Px = useMediaQuery('(min-width: 900px)');
 
   if (loading) {
@@ -44,7 +45,7 @@ export const InviteForm: FC = () => {
   return (
     <Stack alignItems="center" gap={3}>
       <ShiningText
-        variant={is900Px ? 'h1' : 'h2'}
+        variant={is1500Px ? 'h1' : is900Px ? 'h2' : 'h3'}
         textAlign="center"
         sx={{ color: '#BD9E24' }}
         fontFamily='"Parisienne", serif'
