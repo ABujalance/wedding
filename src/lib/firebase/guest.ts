@@ -18,6 +18,18 @@ const COLLECTION_NAME = 'guests';
 export type BusOrigin = 'Sevilla' | 'Huelva' | 'Lucena';
 export type Dish = 'marisco' | 'carne';
 
+export type Group =
+  | 'Novios'
+  | 'Familia Alberto Bujalance Muñoz'
+  | 'Familia Verónica'
+  | 'Sevilla'
+  | 'Amigos Alberto Bujalance Muñoz'
+  | 'Amigos comunes'
+  | 'Amigos Padres Alberto'
+  | 'Amigos Padres Vero'
+  | 'Amigos Verónica'
+  | 'Marchanes';
+
 export interface Guest {
   id: string;
   fullName: string;
@@ -26,6 +38,7 @@ export interface Guest {
   confirmed?: boolean;
   isChild?: boolean;
   dish?: Dish;
+  group?: Group;
   lastUpdate: Date;
   inviteId: string;
 }
@@ -51,6 +64,7 @@ function mapGuest(
     confirmed: data.confirmed,
     isChild: data.isChild,
     dish: data.dish,
+    group: data.group,
     inviteId: data.inviteId,
   };
   return mappedDoc;

@@ -1,11 +1,11 @@
 'use client';
-import { Guest } from '@/lib/firebase/guest';
+import { Guest, Group } from '@/lib/firebase/guest';
 import { Invite } from '@/lib/firebase/invites';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Button, Stack, TextField, Box } from '@mui/material';
+import { Button, Stack, TextField, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import {
   DataGrid,
   GridActionsCellItem,
@@ -111,6 +111,7 @@ export const GuestList: FC<GuestListProps> = ({
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [isCreating, setIsCreating] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<Group | ''>('');
   const [invites, setInvites] = useState<Invite[]>([]);
 
   // Actualizar rows cuando cambien los guests del prop
@@ -136,16 +137,28 @@ export const GuestList: FC<GuestListProps> = ({
     fetchInvites();
   }, [adminTokenId]);
 
-  // Filtrar filas basado en búsqueda
+  // Filtrar filas basado en búsqueda y grupo
   const filteredRows = useMemo(() => {
-    if (!searchText) return rows;
-    return rows.filter(
-      (row) =>
-        row.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.allergies?.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.busOrigin?.toLowerCase().includes(searchText.toLowerCase()),
-    );
-  }, [rows, searchText]);
+    let filtered = rows;
+    
+    // Filtro por texto de búsqueda
+    if (searchText) {
+      filtered = filtered.filter(
+        (row) =>
+          row.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+          row.allergies?.toLowerCase().includes(searchText.toLowerCase()) ||
+          row.busOrigin?.toLowerCase().includes(searchText.toLowerCase()) ||
+          row.group?.toLowerCase().includes(searchText.toLowerCase()),
+      );
+    }
+    
+    // Filtro por grupo seleccionado
+    if (selectedGroup) {
+      filtered = filtered.filter((row) => row.group === selectedGroup);
+    }
+    
+    return filtered;
+  }, [rows, searchText, selectedGroup]);
 
   // Función para añadir una nueva fila en modo edición
   const handleAddNewGuest = () => {
@@ -344,6 +357,27 @@ export const GuestList: FC<GuestListProps> = ({
           onChange={(e) => setSearchText(e.target.value)}
           sx={{ minWidth: 250 }}
         />
+
+        <FormControl size="small" sx={{ minWidth: 200 }}>
+          <InputLabel>Filtrar por grupo</InputLabel>
+          <Select
+            value={selectedGroup}
+            onChange={(e) => setSelectedGroup(e.target.value as Group | '')}
+            label="Filtrar por grupo"
+          >
+            <MenuItem value="">Todos los grupos</MenuItem>
+            <MenuItem value="Novios">Novios</MenuItem>
+            <MenuItem value="Familia Alberto Bujalance Muñoz">Familia Alberto Bujalance Muñoz</MenuItem>
+            <MenuItem value="Familia Verónica">Familia Verónica</MenuItem>
+            <MenuItem value="Sevilla">Sevilla</MenuItem>
+            <MenuItem value="Amigos Alberto Bujalance Muñoz">Amigos Alberto Bujalance Muñoz</MenuItem>
+            <MenuItem value="Amigos comunes">Amigos comunes</MenuItem>
+            <MenuItem value="Amigos Padres Alberto">Amigos Padres Alberto</MenuItem>
+            <MenuItem value="Amigos Padres Vero">Amigos Padres Vero</MenuItem>
+            <MenuItem value="Amigos Verónica">Amigos Verónica</MenuItem>
+            <MenuItem value="Marchanes">Marchanes</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       <DataGrid
@@ -414,6 +448,25 @@ export const GuestList: FC<GuestListProps> = ({
             editable: true,
             type: 'singleSelect',
             valueOptions: ['marisco', 'carne'],
+          },
+          {
+            field: 'group',
+            flex: 1,
+            headerName: 'Grupo',
+            editable: true,
+            type: 'singleSelect',
+            valueOptions: [
+              'Novios',
+              'Familia Alberto Bujalance Muñoz',
+              'Familia Verónica',
+              'Sevilla',
+              'Amigos Alberto Bujalance Muñoz',
+              'Amigos comunes',
+              'Amigos Padres Alberto',
+              'Amigos Padres Vero',
+              'Amigos Verónica',
+              'Marchanes'
+            ],
           },
           {
             field: 'lastUpdate',
