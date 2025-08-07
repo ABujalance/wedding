@@ -7,6 +7,7 @@ import { FC } from 'react';
 import { HomePage } from './HomePage';
 
 export const HomePageContainer: FC = ({}) => {
+  const is600Px = useMediaQuery('(min-width: 600px)');
   const is900Px = useMediaQuery('(min-width: 900px)');
   const is1500Px = useMediaQuery('(min-width: 1500px)');
 
@@ -16,8 +17,20 @@ export const HomePageContainer: FC = ({}) => {
         sx={{
           color: '#8B4513',
           background: `url(${BackgroundImage.src}) center `,
-          backgroundPositionY: is1500Px ? -500 : is900Px ? -300 : 'center',
-          backgroundPositionX: is1500Px ? 0 : is900Px ? -300 : 'center',
+          backgroundPositionY: is1500Px
+            ? -500
+            : is900Px
+            ? -300
+            : is600Px
+            ? -150 // Para tablets, ajustar un poco hacia arriba
+            : -100, // Para móviles, ajustar hacia arriba para mostrar adornos superiores
+          backgroundPositionX: is1500Px
+            ? 0
+            : is900Px
+            ? -300
+            : is600Px
+            ? -100 // Para tablets, centrar mejor
+            : 'center', // Para móviles, mantener centrado horizontalmente
         }}
       >
         <HomePage />

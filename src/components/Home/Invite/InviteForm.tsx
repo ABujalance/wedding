@@ -13,6 +13,7 @@ export const InviteForm: FC = () => {
 
   const is1500Px = useMediaQuery('(min-width: 1500px)');
   const is900Px = useMediaQuery('(min-width: 900px)');
+  const is600Px = useMediaQuery('(min-width: 600px)');
 
   if (loading) {
     return <CircularProgress />;
@@ -45,7 +46,7 @@ export const InviteForm: FC = () => {
   return (
     <Stack alignItems="center" gap={3}>
       <ShiningText
-        variant={is1500Px ? 'h1' : is900Px ? 'h2' : 'h3'}
+        variant={is1500Px ? 'h1' : is900Px ? 'h2' : is600Px ? 'h3' : 'h4'}
         textAlign="center"
         sx={{ color: '#BD9E24' }}
         fontFamily='"Parisienne", serif'
@@ -55,6 +56,7 @@ export const InviteForm: FC = () => {
         Verónica
       </ShiningText>
       <ShiningText
+        variant={is1500Px ? 'h3' : is900Px ? 'h4' : 'body1'}
         textAlign="center"
         sx={{ color: '#BD9E24' }}
         fontFamily='"Parisienne", serif'
