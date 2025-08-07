@@ -22,15 +22,15 @@ export const HomePageContainer: FC = ({}) => {
             : is900Px
             ? -300
             : is600Px
-            ? -150 // Para tablets, ajustar un poco hacia arriba
-            : -100, // Para móviles, ajustar hacia arriba para mostrar adornos superiores
+            ? -150
+            : -100,
           backgroundPositionX: is1500Px
             ? 0
             : is900Px
             ? -300
             : is600Px
-            ? -100 // Para tablets, centrar mejor
-            : 'center', // Para móviles, mantener centrado horizontalmente
+            ? -100
+            : 'center',
         }}
       >
         <HomePage />

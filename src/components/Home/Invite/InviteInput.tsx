@@ -131,10 +131,11 @@ export const InviteInput: FC<InviteInputProps> = ({
             boxShadow: '0 3px 10px rgba(0, 0, 0, 0.3)',
           },
           '&.Mui-disabled': {
-            backgroundColor: 'rgba(255, 255, 255, 0.6)', // Más opaco para mejor visibilidad
-            color: 'rgba(101, 67, 33, 0.6)', // Color más visible, usando el brown original
-            border: '3px solid rgba(255, 255, 255, 0.6)', // Borde más visible
-            boxShadow: '0 3px 8px rgba(0, 0, 0, 0.2)', // Mantener algo de sombra
+            backgroundColor: 'rgba(255, 255, 255, 0.4)', // Menos opaco que el activo
+            color: 'rgba(101, 67, 33, 0.4)', // Más tenue que el activo
+            border: '3px solid rgba(255, 255, 255, 0.4)', // Borde más tenue
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', // Sombra más sutil
+            cursor: 'not-allowed', // Indicar que no se puede clickear
           },
         }}
         variant="contained"
