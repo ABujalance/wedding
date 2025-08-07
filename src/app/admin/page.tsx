@@ -2,7 +2,7 @@ import { getAllGuests } from '@/lib/firebase/guest';
 import { Stack, Typography } from '@mui/material';
 import { redirect } from 'next/navigation';
 import { PageLayout } from '../PageLayout';
-import { GuestList } from './components/GuestList';
+import { AdminDashboard } from './components/AdminDashboard';
 import { PageProps } from '../../../.next/types/app/layout';
 
 export default async function Admin({ searchParams }: PageProps) {
@@ -19,8 +19,10 @@ export default async function Admin({ searchParams }: PageProps) {
     <div>
       <PageLayout>
         <Stack color="black">
-          <Typography>Administrador</Typography>
-          <GuestList guests={guests} />
+          <Typography variant="h3" gutterBottom>
+            Panel de Administración
+          </Typography>
+          <AdminDashboard guests={guests} adminTokenId={adminTokenId} />
         </Stack>
       </PageLayout>
     </div>

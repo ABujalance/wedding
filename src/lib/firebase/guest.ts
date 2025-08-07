@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentSnapshot,
@@ -15,6 +16,7 @@ import { firebaseDB } from './firebaseConfig';
 const COLLECTION_NAME = 'guests';
 
 export type BusOrigin = 'Sevilla' | 'Huelva' | 'Lucena';
+export type Dish = 'marisco' | 'carne';
 
 export interface Guest {
   id: string;
@@ -23,6 +25,7 @@ export interface Guest {
   busOrigin?: BusOrigin;
   confirmed?: boolean;
   isChild?: boolean;
+  dish?: Dish;
   lastUpdate: Date;
   inviteId: string;
 }
@@ -38,14 +41,16 @@ function mapGuest(
   if (!data) {
     return null;
   }
+
   const mappedDoc: Guest = {
     id: doc.id,
     fullName: data.fullName,
-    lastUpdate: data.lastUpdate.toDate(),
+    lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : new Date(),
     allergies: data.allergies,
     busOrigin: data.busOrigin,
     confirmed: data.confirmed,
     isChild: data.isChild,
+    dish: data.dish,
     inviteId: data.inviteId,
   };
   return mappedDoc;
@@ -70,16 +75,21 @@ export async function getGuest(guestId: string): Promise<Guest | null> {
   return mapGuest(guestSnapshot);
 }
 
-export async function updateGuest(guest: Guest): Promise<void> {
-  const docRef = guestDoc(guest.id);
+export async function updateGuest(
+  guestId: string,
+  updates: Partial<Omit<Guest, 'id' | 'lastUpdate'>>,
+): Promise<void> {
+  const docRef = guestDoc(guestId);
+
+  // Only include fields that are actually provided (not undefined)
+  const cleanUpdates = Object.fromEntries(
+    Object.entries(updates).filter(([, value]) => value !== undefined),
+  );
+
   await setDoc(
     docRef,
     {
-      fullName: guest.fullName,
-      allergies: guest.allergies,
-      busOrigin: guest.busOrigin,
-      confirmed: guest.confirmed,
-      isChild: guest.isChild,
+      ...cleanUpdates,
       lastUpdate: new Date(),
     },
     { merge: true },
@@ -98,6 +108,11 @@ export async function createGuest(
 
   await setDoc(newGuestRef, newGuest, { merge: true });
   return newGuest;
+}
+
+export async function deleteGuest(guestId: string): Promise<void> {
+  const docRef = guestDoc(guestId);
+  await deleteDoc(docRef);
 }
 
 function guestDoc(guestId: string) {

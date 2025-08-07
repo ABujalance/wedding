@@ -24,7 +24,7 @@ export const HomePage: FC = ({}) => {
       <Stack
         marginBottom="50px"
         marginTop={
-          is1500Px ? '400px' : is900Px ? '350px' : is600Px ? '200px' : '150px'
+          is1500Px ? '250px' : is900Px ? '350px' : is600Px ? '200px' : '150px'
         }
         borderRadius="16px"
         sx={{
@@ -67,7 +67,7 @@ export const HomePage: FC = ({}) => {
         <Box
           padding="20px"
           paddingTop={
-            is1500Px ? '350px' : is900Px ? '200px' : is600Px ? '170px' : '125px'
+            is1500Px ? '300px' : is900Px ? '200px' : is600Px ? '170px' : '125px'
           }
           minHeight="50vh"
           paddingX="20%"
