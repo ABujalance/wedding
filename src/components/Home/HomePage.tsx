@@ -69,7 +69,7 @@ export const HomePage: FC = ({}) => {
           paddingTop={
             is1500Px ? '350px' : is900Px ? '200px' : is600Px ? '170px' : '125px'
           }
-          minHeight="50vh"
+          minHeight="60vh"
           paddingX="20%"
         >
           <InviteForm />
