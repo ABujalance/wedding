@@ -16,9 +16,11 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridActionsCellItem, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
 import { FC, useEffect, useState, useCallback } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { GuestList } from './GuestList';
@@ -39,6 +41,8 @@ export const InvitesList: FC<InvitesListProps> = ({
   const [loadingGuests, setLoadingGuests] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [allGuests, setAllGuests] = useState<Guest[]>([]);
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     const fetchInvites = async () => {
@@ -84,6 +88,174 @@ export const InvitesList: FC<InvitesListProps> = ({
     fetchInvites();
     fetchAllGuests();
   }, [adminTokenId]);
+
+  // Funciones para manejar CRUD de invitaciones
+  const saveInvite = async (
+    inviteId: string,
+    updates: Record<string, unknown>
+  ) => {
+    try {
+      const response = await fetch(`/api/admin/invites/${inviteId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': adminTokenId,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update invite');
+      }
+
+      console.log('Invitación actualizada exitosamente:', updates);
+    } catch (error) {
+      console.error('Error actualizando invitación:', error);
+    }
+  };
+
+  const createNewInvite = async (newInvite: Omit<Invite, 'id' | 'lastUpdate'>) => {
+    try {
+      const response = await fetch('/api/admin/invites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': adminTokenId,
+        },
+        body: JSON.stringify(newInvite),
+      });
+
+      if (response.ok) {
+        const createdInvite = await response.json();
+        console.log('Nueva invitación creada:', createdInvite);
+        return createdInvite;
+      } else {
+        console.error('Error creando invitación');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+
+  const deleteInvitation = useCallback(async (inviteId: string) => {
+    try {
+      const response = await fetch(`/api/admin/invites/${inviteId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-admin-token': adminTokenId,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete invite');
+      }
+
+      console.log('Invitación eliminada exitosamente');
+      return true;
+    } catch (error) {
+      console.error('Error eliminando invitación:', error);
+      return false;
+    }
+  }, [adminTokenId]);
+
+  // Función para añadir una nueva invitación
+  const handleAddNewInvite = () => {
+    const newId = `temp-${Date.now()}`;
+    const newInvite: Invite = {
+      id: newId,
+      displayName: '',
+      notes: '',
+      email: '',
+      phone: '',
+      address: '',
+      lastUpdate: new Date(),
+    };
+
+    setInvites((prevInvites) => [newInvite, ...prevInvites]);
+    setRowModesModel((prevModel) => ({
+      ...prevModel,
+      [newId]: { mode: GridRowModes.Edit },
+    }));
+    setIsCreating(true);
+  };
+
+  // Función para eliminar una invitación
+  const handleDeleteInvite = useCallback(
+    async (inviteId: string, inviteName: string) => {
+      const confirmed = window.confirm(
+        `¿Estás seguro de que quieres eliminar la invitación "${inviteName}"? Esta acción no se puede deshacer.`
+      );
+
+      if (confirmed) {
+        const success = await deleteInvitation(inviteId);
+        if (success) {
+          setInvites((prevInvites) => prevInvites.filter((invite) => invite.id !== inviteId));
+        }
+      }
+    },
+    [deleteInvitation]
+  );
+
+  // Función para manejar cambios en el modo de edición
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
+  // Función para procesar actualizaciones de filas
+  const processRowUpdate = async (newRow: Invite) => {
+    if (newRow.id.startsWith('temp-')) {
+      // Crear nueva invitación
+      try {
+        const createdInvite = await createNewInvite(newRow);
+        if (createdInvite) {
+          const inviteWithValidDate = {
+            ...createdInvite,
+            lastUpdate: new Date(),
+          };
+          setInvites((prevInvites) =>
+            prevInvites.map((invite) =>
+              invite.id === newRow.id ? inviteWithValidDate : invite
+            )
+          );
+          setIsCreating(false);
+          return inviteWithValidDate;
+        }
+      } catch (error) {
+        console.error('Error creando nueva invitación:', error);
+        throw error;
+      }
+    } else {
+      // Actualizar invitación existente
+      const oldRow = invites.find((invite) => invite.id === newRow.id);
+      if (oldRow) {
+        const changedFields: Record<string, unknown> = {};
+        (Object.keys(newRow) as Array<keyof Invite>).forEach((key) => {
+          if (
+            key !== 'id' &&
+            key !== 'lastUpdate' &&
+            newRow[key] !== oldRow[key]
+          ) {
+            changedFields[key] = newRow[key];
+          }
+        });
+
+        if (Object.keys(changedFields).length > 0) {
+          const updatedRowWithValidDate = {
+            ...newRow,
+            lastUpdate: new Date(),
+          };
+          setInvites((prevInvites) =>
+            prevInvites.map((invite) =>
+              invite.id === newRow.id ? updatedRowWithValidDate : invite
+            )
+          );
+          await saveInvite(newRow.id, changedFields);
+        }
+      }
+    }
+
+    return { ...newRow, lastUpdate: new Date() };
+  };
 
   const handleViewGuests = useCallback(
     async (invite: Invite) => {
@@ -168,32 +340,59 @@ export const InvitesList: FC<InvitesListProps> = ({
       field: 'id',
       headerName: 'ID',
       flex: 0.5,
+      editable: false,
     },
     {
       field: 'displayName',
       headerName: 'Nombre de la Invitación',
       flex: 2,
+      editable: true,
     },
     {
       field: 'email',
       headerName: 'Email',
       flex: 1,
+      editable: true,
     },
     {
       field: 'phone',
       headerName: 'Teléfono',
       flex: 1,
+      editable: true,
+    },
+    {
+      field: 'address',
+      headerName: 'Dirección',
+      flex: 2,
+      editable: true,
     },
     {
       field: 'notes',
       headerName: 'Notas',
       flex: 2,
+      editable: true,
+    },
+    {
+      field: 'lastUpdate',
+      headerName: 'Última actualización',
+      flex: 1,
+      type: 'dateTime',
+      editable: false,
+      valueGetter: (value: Date | string | number | null | undefined) => {
+        if (!value) return null;
+        if (value instanceof Date) return value;
+        if (typeof value === 'string' || typeof value === 'number') {
+          const date = new Date(value);
+          return isNaN(date.getTime()) ? null : date;
+        }
+        return null;
+      },
     },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Acciones',
-      width: 100,
+      width: 150,
       getActions: ({ row }) => {
         return [
           <GridActionsCellItem
@@ -203,6 +402,13 @@ export const InvitesList: FC<InvitesListProps> = ({
             onClick={() => handleViewGuests(row)}
             color="inherit"
           />,
+          <GridActionsCellItem
+            key="delete"
+            icon={<DeleteIcon />}
+            label="Eliminar"
+            onClick={() => handleDeleteInvite(row.id, row.displayName)}
+            color="inherit"
+          />,
         ];
       },
     },
@@ -210,14 +416,28 @@ export const InvitesList: FC<InvitesListProps> = ({
 
   return (
     <Box sx={{ height: 600, width: '100%' }}>
-      <Typography variant="h4" gutterBottom>
-        Invitaciones
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h4">
+          Invitaciones
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddNewInvite}
+          disabled={isCreating}
+        >
+          Añadir Nueva Invitación
+        </Button>
+      </Box>
 
       <DataGrid
         rows={invites}
         columns={columns}
         loading={loading}
+        editMode="row"
+        rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
+        processRowUpdate={processRowUpdate}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}
         initialState={{

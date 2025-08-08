@@ -6,6 +6,8 @@ import {
   getDoc,
   getDocs,
   QueryDocumentSnapshot,
+  setDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import { firebaseDB } from './firebaseConfig';
 
@@ -17,6 +19,7 @@ export interface Invite {
   notes?: string;
   email?: string;
   phone?: string;
+  address?: string;
   lastUpdate?: Date;
 }
 
@@ -36,6 +39,7 @@ function mapInvite(
     notes: data.notes,
     email: data.email,
     phone: data.phone,
+    address: data.address,
     lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : undefined,
   };
 }
@@ -60,4 +64,45 @@ export async function getInvite(inviteId: string): Promise<Invite | null> {
 
 function inviteDoc(inviteId: string) {
   return doc(firebaseDB, COLLECTION_NAME, inviteId);
+}
+
+export async function updateInvite(
+  inviteId: string,
+  updates: Partial<Omit<Invite, 'id' | 'lastUpdate'>>,
+): Promise<void> {
+  const docRef = inviteDoc(inviteId);
+
+  // Only include fields that are actually provided (not undefined)
+  const cleanUpdates = Object.fromEntries(
+    Object.entries(updates).filter(([, value]) => value !== undefined),
+  );
+
+  await setDoc(
+    docRef,
+    {
+      ...cleanUpdates,
+      lastUpdate: new Date(),
+    },
+    { merge: true },
+  );
+}
+
+export async function createInvite(
+  invite: Omit<Invite, 'id' | 'lastUpdate'>,
+): Promise<Invite> {
+  const invitesCol = collection(firebaseDB, COLLECTION_NAME);
+  const newInviteRef = doc(invitesCol);
+  const newInvite: Invite = {
+    id: newInviteRef.id,
+    lastUpdate: new Date(),
+    ...invite,
+  };
+
+  await setDoc(newInviteRef, newInvite, { merge: true });
+  return newInvite;
+}
+
+export async function deleteInvite(inviteId: string): Promise<void> {
+  const docRef = inviteDoc(inviteId);
+  await deleteDoc(docRef);
 }

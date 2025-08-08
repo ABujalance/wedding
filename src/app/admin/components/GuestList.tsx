@@ -5,7 +5,16 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Button, Stack, TextField, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+  Button,
+  Stack,
+  TextField,
+  Box,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 import {
   DataGrid,
   GridActionsCellItem,
@@ -140,7 +149,7 @@ export const GuestList: FC<GuestListProps> = ({
   // Filtrar filas basado en búsqueda y grupo
   const filteredRows = useMemo(() => {
     let filtered = rows;
-    
+
     // Filtro por texto de búsqueda
     if (searchText) {
       filtered = filtered.filter(
@@ -151,12 +160,12 @@ export const GuestList: FC<GuestListProps> = ({
           row.group?.toLowerCase().includes(searchText.toLowerCase()),
       );
     }
-    
+
     // Filtro por grupo seleccionado
     if (selectedGroup) {
       filtered = filtered.filter((row) => row.group === selectedGroup);
     }
-    
+
     return filtered;
   }, [rows, searchText, selectedGroup]);
 
@@ -367,12 +376,18 @@ export const GuestList: FC<GuestListProps> = ({
           >
             <MenuItem value="">Todos los grupos</MenuItem>
             <MenuItem value="Novios">Novios</MenuItem>
-            <MenuItem value="Familia Alberto Bujalance Muñoz">Familia Alberto Bujalance Muñoz</MenuItem>
+            <MenuItem value="Familia Alberto Bujalance Muñoz">
+              Familia Alberto Bujalance Muñoz
+            </MenuItem>
             <MenuItem value="Familia Verónica">Familia Verónica</MenuItem>
             <MenuItem value="Sevilla">Sevilla</MenuItem>
-            <MenuItem value="Amigos Alberto Bujalance Muñoz">Amigos Alberto Bujalance Muñoz</MenuItem>
+            <MenuItem value="Amigos Alberto Bujalance Muñoz">
+              Amigos Alberto Bujalance Muñoz
+            </MenuItem>
             <MenuItem value="Amigos comunes">Amigos comunes</MenuItem>
-            <MenuItem value="Amigos Padres Alberto">Amigos Padres Alberto</MenuItem>
+            <MenuItem value="Amigos Padres Alberto">
+              Amigos Padres Alberto
+            </MenuItem>
             <MenuItem value="Amigos Padres Vero">Amigos Padres Vero</MenuItem>
             <MenuItem value="Amigos Verónica">Amigos Verónica</MenuItem>
             <MenuItem value="Marchanes">Marchanes</MenuItem>
@@ -465,7 +480,7 @@ export const GuestList: FC<GuestListProps> = ({
               'Amigos Padres Alberto',
               'Amigos Padres Vero',
               'Amigos Verónica',
-              'Marchanes'
+              'Marchanes',
             ],
           },
           {
