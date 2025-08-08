@@ -2,15 +2,14 @@
 
 import BackgroundImage from '@/assets/images/paper.png';
 import WreathImage from '@/assets/images/wreath-opaque.png';
-import { Box, Stack, useMediaQuery } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Image from 'next/image';
 import { FC } from 'react';
 import { InviteForm } from './Invite/InviteForm';
+import { useBreakpoints } from '@/hooks/useBreakpoints';
 
 export const HomePage: FC = ({}) => {
-  const is600Px = useMediaQuery('(min-width: 600px)');
-  const is900Px = useMediaQuery('(min-width: 900px)');
-  const is1500Px = useMediaQuery('(min-width: 1500px)');
+  const { isXl, isL, isM } = useBreakpoints();
 
   return (
     <Stack
@@ -23,18 +22,10 @@ export const HomePage: FC = ({}) => {
     >
       <Stack
         marginBottom="50px"
-        marginTop={
-          is1500Px ? '250px' : is900Px ? '350px' : is600Px ? '200px' : '150px'
-        }
+        marginTop={isXl ? '250px' : isL ? '350px' : isM ? '200px' : '150px'}
         borderRadius="16px"
         sx={{
-          width: is1500Px
-            ? '1200px'
-            : is900Px
-            ? '800px'
-            : is600Px
-            ? '550px'
-            : '350px',
+          width: isXl ? '1200px' : isL ? '800px' : isM ? '550px' : '350px',
           background: `url(${BackgroundImage.src}) `,
           position: 'relative',
           overflow: 'visible',
@@ -44,13 +35,7 @@ export const HomePage: FC = ({}) => {
           sx={{
             position: 'absolute',
             width: '120%',
-            top: is1500Px
-              ? '-300px'
-              : is900Px
-              ? '-200px'
-              : is600Px
-              ? '-110px'
-              : '-80px',
+            top: isXl ? '-300px' : isL ? '-200px' : isM ? '-110px' : '-80px',
             left: '50%',
             transform: 'translateX(-50%)',
           }}
@@ -66,9 +51,7 @@ export const HomePage: FC = ({}) => {
         </Box>
         <Box
           padding="20px"
-          paddingTop={
-            is1500Px ? '300px' : is900Px ? '200px' : is600Px ? '170px' : '125px'
-          }
+          paddingTop={isXl ? '300px' : isL ? '200px' : isM ? '170px' : '125px'}
           minHeight="50vh"
           paddingX="20%"
         >

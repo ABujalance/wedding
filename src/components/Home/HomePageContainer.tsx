@@ -2,39 +2,28 @@
 
 import BackgroundImage from '@/assets/images/background.webp';
 import { LoadingCurtains } from '@/components/LoadingCurtains/LoadingCurtains';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 import { HomePage } from './HomePage';
+import { HomeThemeWrapper } from './HomeThemeWrapper';
+import { useBreakpoints } from '@/hooks/useBreakpoints';
 
 export const HomePageContainer: FC = ({}) => {
-  const is600Px = useMediaQuery('(min-width: 600px)');
-  const is900Px = useMediaQuery('(min-width: 900px)');
-  const is1500Px = useMediaQuery('(min-width: 1500px)');
+  const { isXl, isL, isM } = useBreakpoints();
 
   return (
-    <LoadingCurtains>
-      <Box
-        sx={{
-          color: '#8B4513',
-          background: `url(${BackgroundImage.src}) center `,
-          backgroundPositionY: is1500Px
-            ? -500
-            : is900Px
-            ? -300
-            : is600Px
-            ? -150
-            : -100,
-          backgroundPositionX: is1500Px
-            ? 0
-            : is900Px
-            ? -300
-            : is600Px
-            ? -100
-            : 'center',
-        }}
-      >
-        <HomePage />
-      </Box>
-    </LoadingCurtains>
+    <HomeThemeWrapper>
+      <LoadingCurtains>
+        <Box
+          sx={{
+            background: `url(${BackgroundImage.src}) center `,
+            backgroundPositionY: isXl ? -500 : isL ? -300 : isM ? -150 : -100,
+            backgroundPositionX: isXl ? 0 : isL ? -300 : isM ? -100 : 'center',
+          }}
+        >
+          <HomePage />
+        </Box>
+      </LoadingCurtains>
+    </HomeThemeWrapper>
   );
 };
