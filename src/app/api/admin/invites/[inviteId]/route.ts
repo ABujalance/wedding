@@ -3,9 +3,10 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { inviteId: string } }
+  { params }: { params: Promise<{ inviteId: string }> },
 ) {
   try {
+    const { inviteId } = await params;
     const adminTokenId = request.headers.get('x-admin-token');
 
     if (!adminTokenId) {
@@ -23,7 +24,7 @@ export async function GET(
       });
     }
 
-    const invite = await getInvite(params.inviteId);
+    const invite = await getInvite(inviteId);
     if (!invite) {
       return new Response(JSON.stringify({ error: 'Invite not found' }), {
         status: 404,
@@ -46,9 +47,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { inviteId: string } }
+  { params }: { params: Promise<{ inviteId: string }> },
 ) {
   try {
+    const { inviteId } = await params;
     const adminTokenId = request.headers.get('x-admin-token');
 
     if (!adminTokenId) {
@@ -67,7 +69,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    await updateInvite(params.inviteId, body);
+    await updateInvite(inviteId, body);
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
@@ -84,9 +86,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { inviteId: string } }
+  { params }: { params: Promise<{ inviteId: string }> },
 ) {
   try {
+    const { inviteId } = await params;
     const adminTokenId = request.headers.get('x-admin-token');
 
     if (!adminTokenId) {
@@ -104,7 +107,7 @@ export async function DELETE(
       });
     }
 
-    await deleteInvite(params.inviteId);
+    await deleteInvite(inviteId);
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

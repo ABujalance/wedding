@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const newInvite = await createInvite(body);
-    
+
     return new Response(JSON.stringify(newInvite), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },

@@ -16,7 +16,13 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridActionsCellItem, GridRowModes, GridRowModesModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridActionsCellItem,
+  GridRowModes,
+  GridRowModesModel,
+} from '@mui/x-data-grid';
 import { FC, useEffect, useState, useCallback } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -92,7 +98,7 @@ export const InvitesList: FC<InvitesListProps> = ({
   // Funciones para manejar CRUD de invitaciones
   const saveInvite = async (
     inviteId: string,
-    updates: Record<string, unknown>
+    updates: Record<string, unknown>,
   ) => {
     try {
       const response = await fetch(`/api/admin/invites/${inviteId}`, {
@@ -114,7 +120,9 @@ export const InvitesList: FC<InvitesListProps> = ({
     }
   };
 
-  const createNewInvite = async (newInvite: Omit<Invite, 'id' | 'lastUpdate'>) => {
+  const createNewInvite = async (
+    newInvite: Omit<Invite, 'id' | 'lastUpdate'>,
+  ) => {
     try {
       const response = await fetch('/api/admin/invites', {
         method: 'POST',
@@ -137,26 +145,29 @@ export const InvitesList: FC<InvitesListProps> = ({
     }
   };
 
-  const deleteInvitation = useCallback(async (inviteId: string) => {
-    try {
-      const response = await fetch(`/api/admin/invites/${inviteId}`, {
-        method: 'DELETE',
-        headers: {
-          'x-admin-token': adminTokenId,
-        },
-      });
+  const deleteInvitation = useCallback(
+    async (inviteId: string) => {
+      try {
+        const response = await fetch(`/api/admin/invites/${inviteId}`, {
+          method: 'DELETE',
+          headers: {
+            'x-admin-token': adminTokenId,
+          },
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete invite');
+        if (!response.ok) {
+          throw new Error('Failed to delete invite');
+        }
+
+        console.log('Invitación eliminada exitosamente');
+        return true;
+      } catch (error) {
+        console.error('Error eliminando invitación:', error);
+        return false;
       }
-
-      console.log('Invitación eliminada exitosamente');
-      return true;
-    } catch (error) {
-      console.error('Error eliminando invitación:', error);
-      return false;
-    }
-  }, [adminTokenId]);
+    },
+    [adminTokenId],
+  );
 
   // Función para añadir una nueva invitación
   const handleAddNewInvite = () => {
@@ -183,17 +194,19 @@ export const InvitesList: FC<InvitesListProps> = ({
   const handleDeleteInvite = useCallback(
     async (inviteId: string, inviteName: string) => {
       const confirmed = window.confirm(
-        `¿Estás seguro de que quieres eliminar la invitación "${inviteName}"? Esta acción no se puede deshacer.`
+        `¿Estás seguro de que quieres eliminar la invitación "${inviteName}"? Esta acción no se puede deshacer.`,
       );
 
       if (confirmed) {
         const success = await deleteInvitation(inviteId);
         if (success) {
-          setInvites((prevInvites) => prevInvites.filter((invite) => invite.id !== inviteId));
+          setInvites((prevInvites) =>
+            prevInvites.filter((invite) => invite.id !== inviteId),
+          );
         }
       }
     },
-    [deleteInvitation]
+    [deleteInvitation],
   );
 
   // Función para manejar cambios en el modo de edición
@@ -214,8 +227,8 @@ export const InvitesList: FC<InvitesListProps> = ({
           };
           setInvites((prevInvites) =>
             prevInvites.map((invite) =>
-              invite.id === newRow.id ? inviteWithValidDate : invite
-            )
+              invite.id === newRow.id ? inviteWithValidDate : invite,
+            ),
           );
           setIsCreating(false);
           return inviteWithValidDate;
@@ -246,8 +259,8 @@ export const InvitesList: FC<InvitesListProps> = ({
           };
           setInvites((prevInvites) =>
             prevInvites.map((invite) =>
-              invite.id === newRow.id ? updatedRowWithValidDate : invite
-            )
+              invite.id === newRow.id ? updatedRowWithValidDate : invite,
+            ),
           );
           await saveInvite(newRow.id, changedFields);
         }
@@ -416,10 +429,15 @@ export const InvitesList: FC<InvitesListProps> = ({
 
   return (
     <Box sx={{ height: 600, width: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4">
-          Invitaciones
-        </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 2,
+        }}
+      >
+        <Typography variant="h4">Invitaciones</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

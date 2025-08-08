@@ -8,7 +8,7 @@ export async function GET(
   try {
     const inviteId = (await params).inviteId;
     const invite = await getInvite(inviteId);
-    
+
     if (!invite) {
       return new Response(JSON.stringify({ error: 'Invite not found' }), {
         status: 404,
@@ -43,7 +43,7 @@ export async function PATCH(
   try {
     const inviteId = (await params).inviteId;
     const body = await request.json();
-    
+
     // Solo permitir actualizar las notas en la ruta pública
     const allowedUpdates = {
       notes: body.notes,
@@ -66,9 +66,12 @@ export async function PATCH(
     });
   } catch (error) {
     console.error('Error updating invite notes:', error);
-    return new Response(JSON.stringify({ error: 'Failed to update invite notes' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ error: 'Failed to update invite notes' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 }
