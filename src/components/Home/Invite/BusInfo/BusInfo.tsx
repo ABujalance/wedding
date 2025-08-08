@@ -1,17 +1,16 @@
 import { BusOrigin, Guest } from '@/lib/firebase/guest';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
   Box,
   Card,
   CardContent,
-  Grid,
   Grid2,
   Stack,
   Typography,
 } from '@mui/material';
 import { FC } from 'react';
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 type BusInfoProps = { guests: Guest[] };
 
