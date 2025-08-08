@@ -65,7 +65,7 @@ export const BusInfo: FC<BusInfoProps> = ({ guests }) => {
           const busInfo = busDetails[origin as BusOrigin];
 
           return (
-            <Grid2 item xs={12} sm={6} lg={6} key={origin}>
+            <Grid2 size={{ xs: 12, sm: 6, lg: 6 }} key={origin}>
               <Box
                 sx={{
                   height: '100%',
