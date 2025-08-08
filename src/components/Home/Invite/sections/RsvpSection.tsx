@@ -133,38 +133,38 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                   alignItems="flex-start"
                   sx={{ mt: 2, width: '100%' }}
                 >
-                    {g.isChild ? (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        Menú infantil asignado
-                      </Typography>
-                    ) : (
-                      <TextField
-                        select
-                        label="Plato principal"
-                        value={g.dish || ''}
-                        onChange={(e) =>
-                          updateGuest(g.id, { dish: e.target.value as Dish })
-                        }
-                        sx={{ minWidth: 220, mt: 1 }}
-                      >
-                        <MenuItem value="marisco">
-                          Arroz con gambón austral (Marisco)
-                        </MenuItem>
-                        <MenuItem value="carne">
-                          Arroz de rabo de toro (Carne)
-                        </MenuItem>
-                      </TextField>
-                    )}
-
+                  {g.isChild ? (
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      Menú infantil asignado
+                    </Typography>
+                  ) : (
                     <TextField
-                      label="Alergias"
-                      value={g.allergies || ''}
+                      select
+                      label="Plato principal"
+                      value={g.dish || ''}
                       onChange={(e) =>
-                        updateGuest(g.id, { allergies: e.target.value })
+                        updateGuest(g.id, { dish: e.target.value as Dish })
                       }
                       sx={{ minWidth: 220, mt: 1 }}
-                    />
-                  </Stack>
+                    >
+                      <MenuItem value="marisco">
+                        Arroz con gambón austral (Marisco)
+                      </MenuItem>
+                      <MenuItem value="carne">
+                        Arroz de rabo de toro (Carne)
+                      </MenuItem>
+                    </TextField>
+                  )}
+
+                  <TextField
+                    label="Alergias"
+                    value={g.allergies || ''}
+                    onChange={(e) =>
+                      updateGuest(g.id, { allergies: e.target.value })
+                    }
+                    sx={{ minWidth: 220, mt: 1 }}
+                  />
+                </Stack>
               </Collapse>
             </CardContent>
           </Card>
@@ -192,16 +192,20 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
           bgcolor: 'rgba(189, 158, 36, 0.08)',
           border: '1px solid rgba(189, 158, 36, 0.5)',
           borderRadius: 2,
-          p: 2,
+          p: { xs: 1.5, sm: 2 },
           textAlign: 'center',
           width: '100%',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <Typography
           sx={{
-            typography: { xs: 'subtitle1', md: 'h6' },
-            fontWeight: 700,
+            typography: 'h6',
+            fontWeight: 600,
             color: '#8B6B1A',
+            wordBreak: 'break-word',
+            hyphens: 'auto',
           }}
         >
           Fecha límite para confirmar: 14 de noviembre de 2025
