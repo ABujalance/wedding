@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 export const InviteSkeleton: FC = () => {
   return (
-    <Stack sx={{ width: '100%' }} gap={2}>
+    <Stack sx={{ width: '100%' }} gap={2} paddingX="15%">
       <Stack gap={1}>
         {/* Skeleton for invite ID */}
         <Skeleton

@@ -95,18 +95,18 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
             key={g.id}
             sx={{
               width: '100%',
-              alignSelf: 'stretch',
-              maxWidth: '100%',
+              transition: 'all 300ms ease-in-out',
             }}
           >
             <CardContent sx={{ py: 2, px: 2 }}>
-              <Typography variant="h6">{g.fullName}</Typography>
+              {/* Header siempre visible con nombre y checkbox ocupando toda la línea */}
               <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                gap={2}
-                alignItems="flex-start"
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
                 sx={{ width: '100%' }}
               >
+                <Typography variant="h6">{g.fullName}</Typography>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -118,66 +118,54 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                   }
                   label="Asistiré"
                 />
+              </Stack>
 
-                {/* Expand container: width anim (L->R) + Collapse for height (T->B) */}
-                <Box
-                  sx={{
-                    overflow: 'hidden',
-                    width: { xs: '100%', sm: g.confirmed ? '100%' : 0 },
-                    display: {
-                      xs: g.confirmed ? 'block' : 'none',
-                      sm: 'block',
-                    },
-                    transition: 'width 250ms ease',
-                  }}
+              {/* Formulario que aparece con expansión hacia abajo */}
+              <Collapse
+                in={!!g.confirmed}
+                orientation="vertical"
+                timeout={300}
+                unmountOnExit
+              >
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  gap={2}
+                  alignItems="flex-start"
+                  sx={{ mt: 2, width: '100%' }}
                 >
-                  <Collapse
-                    in={!!g.confirmed}
-                    orientation="vertical"
-                    timeout={250}
-                    unmountOnExit
-                  >
-                    <Stack
-                      direction={{ xs: 'column', sm: 'row' }}
-                      gap={2}
-                      alignItems="center"
-                      sx={{ pl: { sm: 1 }, width: '100%' }}
-                    >
-                      {g.isChild ? (
-                        <Typography variant="body2">
-                          Menú infantil asignado
-                        </Typography>
-                      ) : (
-                        <TextField
-                          select
-                          label="Plato principal"
-                          value={g.dish || ''}
-                          onChange={(e) =>
-                            updateGuest(g.id, { dish: e.target.value as Dish })
-                          }
-                          sx={{ minWidth: 220, mt: 1 }}
-                        >
-                          <MenuItem value="marisco">
-                            Arroz con gambón austral (Marisco)
-                          </MenuItem>
-                          <MenuItem value="carne">
-                            Arroz de rabo de toro (Carne)
-                          </MenuItem>
-                        </TextField>
-                      )}
-
+                    {g.isChild ? (
+                      <Typography variant="body2" sx={{ mt: 1 }}>
+                        Menú infantil asignado
+                      </Typography>
+                    ) : (
                       <TextField
-                        label="Alergias"
-                        value={g.allergies || ''}
+                        select
+                        label="Plato principal"
+                        value={g.dish || ''}
                         onChange={(e) =>
-                          updateGuest(g.id, { allergies: e.target.value })
+                          updateGuest(g.id, { dish: e.target.value as Dish })
                         }
                         sx={{ minWidth: 220, mt: 1 }}
-                      />
-                    </Stack>
-                  </Collapse>
-                </Box>
-              </Stack>
+                      >
+                        <MenuItem value="marisco">
+                          Arroz con gambón austral (Marisco)
+                        </MenuItem>
+                        <MenuItem value="carne">
+                          Arroz de rabo de toro (Carne)
+                        </MenuItem>
+                      </TextField>
+                    )}
+
+                    <TextField
+                      label="Alergias"
+                      value={g.allergies || ''}
+                      onChange={(e) =>
+                        updateGuest(g.id, { allergies: e.target.value })
+                      }
+                      sx={{ minWidth: 220, mt: 1 }}
+                    />
+                  </Stack>
+              </Collapse>
             </CardContent>
           </Card>
         ))}

@@ -1,5 +1,6 @@
 'use client';
 import { Box } from '@mui/material';
+import Image from 'next/image';
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 interface PhotoCarouselProps {
@@ -34,26 +35,31 @@ export const PhotoCarousel: FC<PhotoCarouselProps> = ({ images }) => {
         height: { xs: 240, sm: 320, md: 420 },
         overflow: 'hidden',
         borderRadius: 2,
+        flexShrink: 0,
       }}
     >
       {/* Image slides */}
       {randomized.map((img, i) => (
         <Box
           key={img.src}
-          component="img"
-          src={img.src}
-          alt={img.alt}
           sx={{
             position: 'absolute',
             inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
             opacity: i === index ? 1 : 0,
             transition: 'opacity 800ms ease-in-out',
-            filter: 'contrast(1.03) saturate(1.03)',
           }}
-        />
+        >
+          <Image
+            src={img.src}
+            alt={img.alt}
+            fill
+            style={{
+              objectFit: 'cover',
+              filter: 'contrast(1.03) saturate(1.03)',
+            }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+          />
+        </Box>
       ))}
     </Box>
   );

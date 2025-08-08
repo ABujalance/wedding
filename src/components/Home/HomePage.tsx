@@ -53,7 +53,7 @@ export const HomePage: FC = ({}) => {
           padding="20px"
           paddingTop={isXl ? '300px' : isL ? '200px' : isM ? '170px' : '125px'}
           minHeight="50vh"
-          paddingX="20%"
+          paddingX="5%"
         >
           <InviteForm />
         </Box>

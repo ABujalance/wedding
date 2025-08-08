@@ -45,7 +45,7 @@ export const InviteForm: FC = () => {
   };
 
   return (
-    <Stack alignItems="center" gap={3}>
+    <Stack alignItems="center" gap={3} paddingX="15%">
       <ShiningText
         variant={is1500Px ? 'h1' : is900Px ? 'h2' : is600Px ? 'h3' : 'h4'}
         textAlign="center"

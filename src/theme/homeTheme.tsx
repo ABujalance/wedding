@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material';
 const base = createTheme({
   breakpoints: {
     values: {
-      xs: 0, // S
+      xs: 300, // S
       sm: 600, // M
       md: 900, // L
       lg: 1500, // XL
@@ -56,12 +56,12 @@ export const homeTheme = createTheme(base, {
   typography: {
     // Keep sizes elegant and readable without extremes
     h1: {
-      fontWeight: 400,
-      fontSize: 40,
-      [base.breakpoints.up('sm')]: { fontSize: 44 },
-      [base.breakpoints.up('md')]: { fontSize: 48 },
-      [base.breakpoints.up('lg')]: { fontSize: 56 },
-      [base.breakpoints.up('xl')]: { fontSize: 60 },
+      fontWeight: 600,
+      fontSize: 28, // xs (300px+) - S
+      [base.breakpoints.up('sm')]: { fontSize: 36 }, // sm (600px+) - M
+      [base.breakpoints.up('md')]: { fontSize: 48 }, // md (900px+) - L
+      [base.breakpoints.up('lg')]: { fontSize: 64 }, // lg (1500px+) - XL
+      [base.breakpoints.up('xl')]: { fontSize: 80 }, // xl (1920px+)
     },
     h2: {
       fontWeight: 400,
