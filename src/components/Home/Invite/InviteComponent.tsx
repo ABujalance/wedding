@@ -10,7 +10,6 @@ import { EventInfoSection } from '@/components/Home/Invite/sections/EventInfoSec
 import { RsvpSection } from '@/components/Home/Invite/sections/RsvpSection';
 import { AdditionalInfoCards } from '@/components/Home/Invite/sections/AdditionalInfoCards';
 import { ConfirmButtonSection } from '@/components/Home/Invite/sections/ConfirmButtonSection';
-import { MobileNarrowWrapper } from '@/components/Home/Invite/sections/MobileNarrowWrapper';
 import fachada from '@/assets/images/hacienda/Fachada.jpg';
 import hacienda from '@/assets/images/hacienda/hacienda.jpeg';
 
@@ -36,19 +35,17 @@ export const InviteComponent: FC<InviteComponentProps> = ({
         ]}
       />
 
-      <MobileNarrowWrapper>
-        <EventInfoSection />
+      <EventInfoSection />
 
-        <StorySection />
+      <StorySection />
 
-        <BusInfo guests={guests} />
+      <BusInfo guests={guests} />
 
-        <RsvpSection invite={invite} initialGuests={guests} />
+      <RsvpSection invite={invite} initialGuests={guests} />
 
-        <AdditionalInfoCards />
+      <AdditionalInfoCards />
 
-        <ConfirmButtonSection />
-      </MobileNarrowWrapper>
+      <ConfirmButtonSection />
     </Stack>
   );
 };

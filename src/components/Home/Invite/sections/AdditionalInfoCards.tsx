@@ -16,18 +16,28 @@ const items = [
 
 export const AdditionalInfoCards: FC = () => {
   return (
-    <Stack gap={2} alignItems="center">
-      <Typography sx={{ typography: { xs: 'h6', md: 'h5' } }} component="h2">
+    <Stack gap={2} alignItems="center" sx={{ width: '100%' }}>
+      <Typography variant="h5" component="h2">
         Información adicional
       </Typography>
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         gap={2}
         sx={{ width: '100%' }}
+        alignItems="stretch"
         justifyContent="center"
       >
         {items.map((it) => (
-          <Card key={it.title} sx={{ flex: 1, minWidth: 260 }}>
+          <Card
+            key={it.title}
+            sx={{
+              width: { xs: '100%', sm: '100%', md: 'auto' },
+              flex: { md: 1 },
+              minWidth: { md: 260 },
+              alignSelf: 'stretch',
+              maxWidth: '100%',
+            }}
+          >
             <CardContent>
               <Typography variant="h6">{it.title}</Typography>
               <Typography variant="body2">{it.text}</Typography>

@@ -79,7 +79,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
   };
 
   return (
-    <Stack gap={3}>
+    <Stack gap={3} sx={{ width: '100%', maxWidth: '100%' }}>
       <Typography
         variant="h5"
         component="h2"
@@ -89,14 +89,14 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
         Confirmación de asistencia
       </Typography>
 
-      <Stack gap={2}>
+      <Stack gap={2} sx={{ width: '100%' }}>
         {guests.map((g) => (
           <Card
             key={g.id}
             sx={{
-              width: g.confirmed ? '100%' : 'fit-content',
-              alignSelf: g.confirmed ? 'stretch' : 'flex-start',
-              display: 'inline-block',
+              width: '100%',
+              alignSelf: 'stretch',
+              maxWidth: '100%',
             }}
           >
             <CardContent sx={{ py: 2, px: 2 }}>
@@ -105,6 +105,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                 direction={{ xs: 'column', sm: 'row' }}
                 gap={2}
                 alignItems="flex-start"
+                sx={{ width: '100%' }}
               >
                 <FormControlLabel
                   control={
@@ -140,7 +141,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                       direction={{ xs: 'column', sm: 'row' }}
                       gap={2}
                       alignItems="center"
-                      sx={{ pl: { sm: 1 } }}
+                      sx={{ pl: { sm: 1 }, width: '100%' }}
                     >
                       {g.isChild ? (
                         <Typography variant="body2">
@@ -182,7 +183,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
         ))}
       </Stack>
 
-      <Card>
+      <Card sx={{ width: '100%', maxWidth: '100%' }}>
         <CardContent>
           <Stack gap={1}>
             <Typography variant="h6">Comentarios adicionales</Typography>
@@ -205,6 +206,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
           borderRadius: 2,
           p: 2,
           textAlign: 'center',
+          width: '100%',
         }}
       >
         <Typography
