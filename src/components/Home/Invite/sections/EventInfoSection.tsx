@@ -65,7 +65,12 @@ export const EventInfoSection: FC = () => {
             <Box sx={{ flex: { xs: 1, lg: 0.4 }, minWidth: 0 }}>
               <DateSection />
             </Box>
-            <Box sx={{ flex: { xs: 1, lg: 0.6 }, minWidth: 0 }}>
+            <Box
+              sx={{
+                flex: { xs: 1, lg: 0.6 },
+                minWidth: 0,
+              }}
+            >
               <LocationSection />
             </Box>
           </Stack>

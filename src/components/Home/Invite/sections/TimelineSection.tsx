@@ -6,10 +6,7 @@ import timeline from '@/assets/images/timeline.png';
 export const TimelineSection: FC = () => {
   return (
     <Stack gap={2} alignItems="center">
-      <Typography
-        sx={{ typography: { xs: 'h6', md: 'h5', lg: 'h4' } }}
-        component="h2"
-      >
+      <Typography variant="h2" fontWeight={800}>
         Horario
       </Typography>
       <Box

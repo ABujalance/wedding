@@ -57,7 +57,7 @@ export const InviteComponent: FC<InviteComponentProps> = ({
           ]}
         />
       </Box>
-      <Box paddingX={{ lg: '15%' }}>
+      <Box paddingX={{ lg: '15%', sm: '11%' }}>
         <EventInfoSection />
       </Box>
 

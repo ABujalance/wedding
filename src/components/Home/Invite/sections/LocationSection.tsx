@@ -9,7 +9,10 @@ import Image from 'next/image';
 
 export const LocationSection: FC = () => {
   const mapsUrl = 'https://maps.app.goo.gl/aWzHhykqJQne9iMVA';
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+  const [modalImage, setModalImage] = useState<{
+    src: string;
+    alt: string;
+  } | null>(null);
 
   const handleImageClick = (src: string, alt: string) => {
     setModalImage({ src, alt });
@@ -73,7 +76,10 @@ export const LocationSection: FC = () => {
             cursor: 'pointer',
             transition: 'transform 0.2s ease',
             '&:hover': {
-              transform: { xs: 'rotate(-2deg) scale(1.05)', md: 'rotate(-3deg) scale(1.05)' },
+              transform: {
+                xs: 'rotate(-2deg) scale(1.05)',
+                md: 'rotate(-3deg) scale(1.05)',
+              },
             },
           }}
           onClick={() => handleImageClick(fachada.src, 'Fachada Hacienda')}
@@ -107,7 +113,10 @@ export const LocationSection: FC = () => {
             cursor: 'pointer',
             transition: 'transform 0.2s ease',
             '&:hover': {
-              transform: { xs: 'rotate(1deg) scale(1.05)', md: 'rotate(2deg) scale(1.05)' },
+              transform: {
+                xs: 'rotate(1deg) scale(1.05)',
+                md: 'rotate(2deg) scale(1.05)',
+              },
             },
           }}
           onClick={() => handleImageClick(hacienda.src, 'Hacienda')}
@@ -173,7 +182,9 @@ export const LocationSection: FC = () => {
                 }}
                 onClick={handleCloseModal}
               >
-                <CloseIcon sx={{ color: '#333', fontSize: { xs: 18, md: 24 } }} />
+                <CloseIcon
+                  sx={{ color: '#333', fontSize: { xs: 18, md: 24 } }}
+                />
               </Box>
               <Box
                 sx={{
