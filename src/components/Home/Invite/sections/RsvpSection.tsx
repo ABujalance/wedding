@@ -1,0 +1,228 @@
+'use client';
+import { Guest, Dish } from '@/lib/firebase/guest';
+import { Invite } from '@/lib/firebase/invites';
+import {
+  Box,
+  Card,
+  CardContent,
+  Checkbox,
+  Collapse,
+  FormControlLabel,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { FC, useCallback, useEffect, useState } from 'react';
+
+interface RsvpSectionProps {
+  invite: Invite;
+  initialGuests: Guest[];
+}
+
+export const RsvpSection: FC<RsvpSectionProps> = ({
+  invite,
+  initialGuests,
+}) => {
+  const [guests, setGuests] = useState<Guest[]>(initialGuests);
+  const [saving, setSaving] = useState(false);
+  const [notes, setNotes] = useState(invite.notes || '');
+  const inviteId = invite.id;
+
+  const submitAll = useCallback(async () => {
+    setSaving(true);
+    try {
+      const guestsRes = await fetch(`/api/invites/${inviteId}/guests`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          guests: guests.map((g) => ({
+            id: g.id,
+            confirmed: g.confirmed,
+            allergies: g.allergies,
+            dish: g.dish,
+          })),
+        }),
+      });
+      if (!guestsRes.ok) throw new Error('Error guardando invitados');
+
+      const notesRes = await fetch(`/api/invites/${inviteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes }),
+      });
+      if (!notesRes.ok) throw new Error('Error guardando notas');
+
+      window.dispatchEvent(
+        new CustomEvent('rsvp-submit-status', { detail: { ok: true } }),
+      );
+    } catch {
+      window.dispatchEvent(
+        new CustomEvent('rsvp-submit-status', { detail: { ok: false } }),
+      );
+    } finally {
+      setSaving(false);
+    }
+  }, [inviteId, guests, notes]);
+
+  useEffect(() => {
+    const handler = () => submitAll();
+    window.addEventListener('submit-rsvp', handler as EventListener);
+    return () =>
+      window.removeEventListener('submit-rsvp', handler as EventListener);
+  }, [submitAll]);
+
+  const updateGuest = (id: string, patch: Partial<Guest>) => {
+    setGuests((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, ...patch } : g)),
+    );
+  };
+
+  return (
+    <Stack gap={3}>
+      <Typography
+        variant="h5"
+        component="h2"
+        textAlign="center"
+        sx={{ typography: { xs: 'h6', md: 'h5' } }}
+      >
+        Confirmación de asistencia
+      </Typography>
+
+      <Stack gap={2}>
+        {guests.map((g) => (
+          <Card
+            key={g.id}
+            sx={{
+              width: g.confirmed ? '100%' : 'fit-content',
+              alignSelf: g.confirmed ? 'stretch' : 'flex-start',
+              display: 'inline-block',
+            }}
+          >
+            <CardContent sx={{ py: 2, px: 2 }}>
+              <Typography variant="h6">{g.fullName}</Typography>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                gap={2}
+                alignItems="flex-start"
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={!!g.confirmed}
+                      onChange={(e) =>
+                        updateGuest(g.id, { confirmed: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Asistiré"
+                />
+
+                {/* Expand container: width anim (L->R) + Collapse for height (T->B) */}
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                    width: { xs: '100%', sm: g.confirmed ? '100%' : 0 },
+                    display: {
+                      xs: g.confirmed ? 'block' : 'none',
+                      sm: 'block',
+                    },
+                    transition: 'width 250ms ease',
+                  }}
+                >
+                  <Collapse
+                    in={!!g.confirmed}
+                    orientation="vertical"
+                    timeout={250}
+                    unmountOnExit
+                  >
+                    <Stack
+                      direction={{ xs: 'column', sm: 'row' }}
+                      gap={2}
+                      alignItems="center"
+                      sx={{ pl: { sm: 1 } }}
+                    >
+                      {g.isChild ? (
+                        <Typography variant="body2">
+                          Menú infantil asignado
+                        </Typography>
+                      ) : (
+                        <TextField
+                          select
+                          label="Plato principal"
+                          value={g.dish || ''}
+                          onChange={(e) =>
+                            updateGuest(g.id, { dish: e.target.value as Dish })
+                          }
+                          sx={{ minWidth: 220, mt: 1 }}
+                        >
+                          <MenuItem value="marisco">
+                            Arroz con gambón austral (Marisco)
+                          </MenuItem>
+                          <MenuItem value="carne">
+                            Arroz de rabo de toro (Carne)
+                          </MenuItem>
+                        </TextField>
+                      )}
+
+                      <TextField
+                        label="Alergias"
+                        value={g.allergies || ''}
+                        onChange={(e) =>
+                          updateGuest(g.id, { allergies: e.target.value })
+                        }
+                        sx={{ minWidth: 220, mt: 1 }}
+                      />
+                    </Stack>
+                  </Collapse>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        ))}
+      </Stack>
+
+      <Card>
+        <CardContent>
+          <Stack gap={1}>
+            <Typography variant="h6">Comentarios adicionales</Typography>
+            <TextField
+              multiline
+              minRows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="¿Algo que debamos saber?"
+              fullWidth
+            />
+          </Stack>
+        </CardContent>
+      </Card>
+
+      <Box
+        sx={{
+          bgcolor: 'rgba(189, 158, 36, 0.08)',
+          border: '1px solid rgba(189, 158, 36, 0.5)',
+          borderRadius: 2,
+          p: 2,
+          textAlign: 'center',
+        }}
+      >
+        <Typography
+          sx={{
+            typography: { xs: 'subtitle1', md: 'h6' },
+            fontWeight: 700,
+            color: '#8B6B1A',
+          }}
+        >
+          Fecha límite para confirmar: 14 de noviembre de 2025
+        </Typography>
+      </Box>
+
+      {saving && (
+        <Box>
+          <Typography variant="body2">Guardando...</Typography>
+        </Box>
+      )}
+    </Stack>
+  );
+};

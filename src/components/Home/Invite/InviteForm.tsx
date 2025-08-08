@@ -4,6 +4,7 @@ import { Stack, useMediaQuery } from '@mui/material';
 import { FC, useState } from 'react';
 import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
+import { HomeThemeWrapper } from '../HomeThemeWrapper';
 
 export const InviteForm: FC = () => {
   const [invite, setInvite] = useState<Invite>();
@@ -16,7 +17,11 @@ export const InviteForm: FC = () => {
   const is600Px = useMediaQuery('(min-width: 600px)');
 
   if (invite) {
-    return <InviteScreen invite={invite} />;
+    return (
+      <HomeThemeWrapper>
+        <InviteScreen invite={invite} />
+      </HomeThemeWrapper>
+    );
   }
 
   const onInviteAccess = async () => {

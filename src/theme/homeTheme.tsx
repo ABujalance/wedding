@@ -1,6 +1,16 @@
 import { createTheme } from '@mui/material';
 
-export const homeTheme = createTheme({
+// Base theme with custom breakpoints matching S/M/L/XL used in the app
+const base = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0, // S
+      sm: 600, // M
+      md: 900, // L
+      lg: 1500, // XL
+      xl: 1920, // Extra large desktops (fallback)
+    },
+  },
   typography: {
     fontFamily: '"Berkshire Swash", serif',
     allVariants: {
@@ -37,6 +47,102 @@ export const homeTheme = createTheme({
           color: '#8B4512',
         },
       },
+    },
+  },
+});
+
+// Extend with responsive typography per breakpoint (S, M, L, XL)
+export const homeTheme = createTheme(base, {
+  typography: {
+    // Keep sizes elegant and readable without extremes
+    h1: {
+      fontWeight: 400,
+      fontSize: 40,
+      [base.breakpoints.up('sm')]: { fontSize: 44 },
+      [base.breakpoints.up('md')]: { fontSize: 48 },
+      [base.breakpoints.up('lg')]: { fontSize: 56 },
+      [base.breakpoints.up('xl')]: { fontSize: 60 },
+    },
+    h2: {
+      fontWeight: 400,
+      fontSize: 32,
+      [base.breakpoints.up('sm')]: { fontSize: 34 },
+      [base.breakpoints.up('md')]: { fontSize: 36 },
+      [base.breakpoints.up('lg')]: { fontSize: 42 },
+      [base.breakpoints.up('xl')]: { fontSize: 46 },
+    },
+    h3: {
+      fontWeight: 400,
+      fontSize: 26,
+      [base.breakpoints.up('sm')]: { fontSize: 28 },
+      [base.breakpoints.up('md')]: { fontSize: 30 },
+      [base.breakpoints.up('lg')]: { fontSize: 34 },
+      [base.breakpoints.up('xl')]: { fontSize: 36 },
+    },
+    h4: {
+      fontWeight: 400,
+      fontSize: 22,
+      [base.breakpoints.up('sm')]: { fontSize: 24 },
+      [base.breakpoints.up('md')]: { fontSize: 26 },
+      [base.breakpoints.up('lg')]: { fontSize: 30 },
+      [base.breakpoints.up('xl')]: { fontSize: 32 },
+    },
+    h5: {
+      fontWeight: 400,
+      fontSize: 20,
+      [base.breakpoints.up('sm')]: { fontSize: 21 },
+      [base.breakpoints.up('md')]: { fontSize: 22 },
+      [base.breakpoints.up('lg')]: { fontSize: 24 },
+      [base.breakpoints.up('xl')]: { fontSize: 26 },
+    },
+    h6: {
+      fontWeight: 400,
+      fontSize: 18,
+      [base.breakpoints.up('sm')]: { fontSize: 19 },
+      [base.breakpoints.up('md')]: { fontSize: 20 },
+      [base.breakpoints.up('lg')]: { fontSize: 21 },
+      [base.breakpoints.up('xl')]: { fontSize: 22 },
+    },
+    subtitle1: {
+      fontSize: 18,
+      [base.breakpoints.up('sm')]: { fontSize: 18 },
+      [base.breakpoints.up('md')]: { fontSize: 19 },
+      [base.breakpoints.up('lg')]: { fontSize: 20 },
+    },
+    subtitle2: {
+      fontSize: 16,
+      [base.breakpoints.up('sm')]: { fontSize: 16 },
+      [base.breakpoints.up('md')]: { fontSize: 17 },
+      [base.breakpoints.up('lg')]: { fontSize: 18 },
+    },
+    body1: {
+      fontSize: 16,
+      [base.breakpoints.up('sm')]: { fontSize: 16 },
+      [base.breakpoints.up('md')]: { fontSize: 17 },
+      [base.breakpoints.up('lg')]: { fontSize: 18 },
+    },
+    body2: {
+      fontSize: 14,
+      [base.breakpoints.up('sm')]: { fontSize: 14 },
+      [base.breakpoints.up('md')]: { fontSize: 15 },
+      [base.breakpoints.up('lg')]: { fontSize: 16 },
+    },
+    button: {
+      fontSize: 15,
+      textTransform: 'none',
+      [base.breakpoints.up('md')]: { fontSize: 16 },
+      [base.breakpoints.up('lg')]: { fontSize: 16 },
+    },
+    caption: {
+      fontSize: 12,
+      [base.breakpoints.up('md')]: { fontSize: 12 },
+      [base.breakpoints.up('lg')]: { fontSize: 13 },
+    },
+    overline: {
+      fontSize: 12,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+      [base.breakpoints.up('lg')]: { fontSize: 12 },
     },
   },
 });
