@@ -79,12 +79,66 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
   };
 
   return (
-    <Stack gap={3} sx={{ width: '100%', maxWidth: '100%' }}>
+    <Stack gap={4} sx={{ width: '100%', maxWidth: '100%' }} id="rsvp-section">
+      {/* Separador decorativo */}
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          my: 4,
+        }}
+      >
+        <Box
+          sx={{
+            flex: 1,
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, #BD9E24, transparent)',
+          }}
+        />
+        <Box
+          sx={{
+            padding: '12px 24px',
+            backgroundColor: '#BD9E24',
+            borderRadius: 50,
+            boxShadow: '0 4px 12px rgba(189, 158, 36, 0.3)',
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'white',
+              fontWeight: 600,
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              fontFamily: '"Limelight", serif',
+              fontSize: '0.9rem',
+            }}
+          >
+            Confirmación
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, #BD9E24, transparent)',
+          }}
+        />
+      </Box>
+
       <Typography
-        variant="h5"
+        variant="h3"
         component="h2"
         textAlign="center"
-        sx={{ typography: { xs: 'h6', md: 'h5' } }}
+        sx={{ 
+          typography: { xs: 'h4', md: 'h3' },
+          fontFamily: '"Caveat", cursive',
+          color: '#BD9E24',
+          fontWeight: 700,
+          mb: 2,
+        }}
       >
         Confirmación de asistencia
       </Typography>

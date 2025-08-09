@@ -10,6 +10,7 @@ import { EventInfoSection } from '@/components/Home/Invite/sections/EventInfoSec
 import { RsvpSection } from '@/components/Home/Invite/sections/RsvpSection';
 import { AdditionalInfoCards } from '@/components/Home/Invite/sections/AdditionalInfoCards';
 import { ConfirmButtonSection } from '@/components/Home/Invite/sections/ConfirmButtonSection';
+import { FloatingRsvpButton } from '@/components/Home/Invite/components/FloatingRsvpButton';
 import nosotros1 from '@/assets/images/nosotros/046d1872-f2c0-4054-aafb-6b4e82573914.jpeg';
 import nosotros2 from '@/assets/images/nosotros/0a892ce7-8701-4586-936e-0d411ce6933d.jpeg';
 import nosotros3 from '@/assets/images/nosotros/0bda12f4-45c6-4a36-afe6-df189ae55314.jpeg';
@@ -80,6 +81,9 @@ export const InviteComponent: FC<InviteComponentProps> = ({
       <Box paddingX={{ lg: '15%' }}>
         <ConfirmButtonSection />
       </Box>
+
+      {/* Botón flotante para ir al formulario */}
+      <FloatingRsvpButton />
     </Stack>
   );
 };
