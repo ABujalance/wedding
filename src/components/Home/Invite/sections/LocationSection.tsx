@@ -1,11 +1,11 @@
 'use client';
-import { Stack, Typography, Button, Box, Modal, Backdrop } from '@mui/material';
+import { Stack, Typography, Box, Modal, Backdrop } from '@mui/material';
 import { FC, useState } from 'react';
 import fachada from '@/assets/images/hacienda/Fachada.jpg';
 import hacienda from '@/assets/images/hacienda/hacienda.jpeg';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
+import { LocationSticker } from '../components/Sticker';
 
 export const LocationSection: FC = () => {
   const mapsUrl = 'https://maps.app.goo.gl/aWzHhykqJQne9iMVA';
@@ -23,30 +23,18 @@ export const LocationSection: FC = () => {
   };
   return (
     <Stack gap={3} alignItems="center">
-      <Typography variant="h5" textAlign="center" sx={{ fontWeight: 800 }}>
+      <Typography
+        variant="h4"
+        textAlign="center"
+        sx={{
+          fontWeight: 800,
+          fontFamily: '"Caveat", cursive',
+          color: '#000000',
+        }}
+      >
         Hacienda Los Frailes de San Alberto
       </Typography>
-      <Button
-        variant="contained"
-        href={mapsUrl}
-        target="_blank"
-        rel="noopener"
-        sx={{
-          backgroundColor: '#BD9E24',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: '#9a7e1c',
-          },
-          textTransform: 'none',
-          px: 3,
-          py: 1.5,
-          borderRadius: 2,
-          boxShadow: '0 4px 12px rgba(189, 158, 36, 0.3)',
-        }}
-        startIcon={<LocationOnIcon />}
-      >
-        Ver en Google Maps
-      </Button>
+      <LocationSticker href={mapsUrl} />
 
       {/* Contenedor de fotos superpuestas */}
       <Box

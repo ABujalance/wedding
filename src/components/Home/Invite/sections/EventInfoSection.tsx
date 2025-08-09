@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { DateSection } from '@/components/Home/Invite/sections/DateSection';
 import { LocationSection } from '@/components/Home/Invite/sections/LocationSection';
 import { TimelineSection } from '@/components/Home/Invite/sections/TimelineSection';
+import StampImage from '@/assets/images/stamp.png';
 
 export const EventInfoSection: FC = () => {
   return (
@@ -54,13 +55,48 @@ export const EventInfoSection: FC = () => {
             background: '#fefefe',
             borderRadius: 3,
             m: 1,
+            // Líneas de escritura de fondo
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 24,
+              left: 24,
+              right: 24,
+              bottom: 24,
+              backgroundImage: `
+                repeating-linear-gradient(
+                  transparent,
+                  transparent 32px,
+                  rgba(62, 39, 35, 0.1) 32px,
+                  rgba(62, 39, 35, 0.1) 33px
+                )
+              `,
+              zIndex: 0,
+              pointerEvents: 'none',
+            },
+            // Sello de fondo
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: 100,
+              left: 0,
+              width: 160,
+              height: 160,
+              backgroundImage: `url(${StampImage.src})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              opacity: 0.3,
+              zIndex: 1,
+              pointerEvents: 'none',
+            },
           }}
         >
           <Stack
             gap={4}
             direction={{ xs: 'column', lg: 'row' }}
-            alignItems={{ xs: 'stretch', lg: 'center' }}
-            sx={{ width: '100%' }}
+            alignItems={{ xs: 'stretch', lg: 'flex-start' }}
+            sx={{ width: '100%', position: 'relative', zIndex: 2 }}
           >
             <Box sx={{ flex: { xs: 1, lg: 0.4 }, minWidth: 0 }}>
               <DateSection />

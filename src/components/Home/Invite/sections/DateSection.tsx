@@ -1,40 +1,34 @@
 'use client';
 import { CountDown } from '@/app/save-the-date/components/countDown/CountDown';
 import { calendarLink } from '@/app/save-the-date/components/saveTheDateInfo/SaveTheDateInfo';
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { FC } from 'react';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { CalendarSticker } from '../components/Sticker';
 
 export const DateSection: FC = () => {
   return (
     <Stack gap={2} alignItems="center">
-      <Typography variant="h5" textAlign="center" fontWeight={800}>
+      <Typography
+        variant="h4"
+        textAlign="center"
+        fontWeight={800}
+        sx={{
+          fontFamily: '"Caveat", cursive',
+          color: '#000000',
+        }}
+      >
         6 de diciembre de 2025
       </Typography>
-      <Stack sx={{ transform: 'scale(0.7)', transformOrigin: 'center' }}>
-        <CountDown />
-      </Stack>
-      <Button
-        variant="contained"
-        href={calendarLink}
-        target="_blank"
-        rel="noopener"
+      <Stack
         sx={{
-          backgroundColor: '#BD9E24',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: '#9a7e1c',
-          },
-          textTransform: 'none',
-          px: 3,
-          py: 1.5,
-          borderRadius: 2,
-          boxShadow: '0 4px 12px rgba(189, 158, 36, 0.3)',
+          transform: 'scale(0.7)',
+          transformOrigin: 'center',
+          color: 'black',
         }}
-        startIcon={<CalendarTodayIcon />}
       >
-        Añadir al calendario
-      </Button>
+        <CountDown fontFamily='"Caveat", cursive' color="black" />
+      </Stack>
+      <CalendarSticker href={calendarLink} />
     </Stack>
   );
 };

@@ -210,7 +210,7 @@ export const PhotoCarousel: FC<PhotoCarouselProps> = ({ images }) => {
               <Typography
                 variant="body1"
                 sx={{
-                  fontFamily: '"Parisienne", serif',
+                  fontFamily: '"Caveat", cursive',
                   color: '#000',
                   fontSize: { xs: '18px', md: '24px' },
                   textAlign: 'center',

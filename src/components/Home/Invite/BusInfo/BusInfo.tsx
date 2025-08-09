@@ -324,6 +324,8 @@ export const BusInfo: FC<BusInfoProps> = ({ guests }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       height: '100%',
+                      position: 'relative',
+                      zIndex: 1,
                     }}
                   >
                     {/* PARTE SUPERIOR DEL TICKET - Información del viaje */}
