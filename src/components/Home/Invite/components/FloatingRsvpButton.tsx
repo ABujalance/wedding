@@ -10,7 +10,7 @@ export const FloatingRsvpButton: FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      
+
       // Si el usuario ha hecho scroll manualmente (más de 100px), ocultar el botón
       if (scrollTop > 100 && !hasScrolled) {
         setHasScrolled(true);
@@ -30,7 +30,7 @@ export const FloatingRsvpButton: FC = () => {
         behavior: 'smooth',
         block: 'start',
       });
-      
+
       // Ocultar el botón después del click
       setTimeout(() => {
         setVisible(false);

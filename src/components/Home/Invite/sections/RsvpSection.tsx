@@ -94,7 +94,8 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
           sx={{
             flex: 1,
             height: '2px',
-            background: 'linear-gradient(90deg, transparent, #BD9E24, transparent)',
+            background:
+              'linear-gradient(90deg, transparent, #BD9E24, transparent)',
           }}
         />
         <Box
@@ -123,7 +124,8 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
           sx={{
             flex: 1,
             height: '2px',
-            background: 'linear-gradient(90deg, transparent, #BD9E24, transparent)',
+            background:
+              'linear-gradient(90deg, transparent, #BD9E24, transparent)',
           }}
         />
       </Box>
@@ -132,7 +134,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
         variant="h3"
         component="h2"
         textAlign="center"
-        sx={{ 
+        sx={{
           typography: { xs: 'h4', md: 'h3' },
           fontFamily: '"Caveat", cursive',
           color: '#BD9E24',
