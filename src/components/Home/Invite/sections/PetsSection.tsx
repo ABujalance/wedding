@@ -16,15 +16,18 @@ const pets = [
     drawing: fuDrawing.src,
     behavior: 'Bueno',
     gender: 'M',
-    info: 'Duis aute irure dolor in reprehenderit in voluptate.',
+    info: 'quiero que mi papi me siga dando palmaditas en el lomo y caricias en la barriga. Este año quiero que Bilbo deje de molestarme y que me deje dormir tranquilo. También quiero muchos premios y juguetes para perseguir yo solito.',
+    imagePosition: '50% 40%', // Posición personalizada con porcentajes
+    imageScale: 2.3, // Zoom: 1.0 = normal, 1.5 = 150%, 0.8 = 80%
   },
   {
     name: 'Bilbo',
     photo: bilboPhoto.src,
     drawing: bilboDrawing.src,
-    behavior: 'Regular',
     gender: 'M',
-    info: 'Duis aute irure dolor in reprehenderit in voluptate.',
+    info: 'Este año me he portado muy bien, por eso quiero pedir que os lleveis a Nami para que no me moleste tanto. También quiero más cables para moderlos',
+    imagePosition: '45% 40%', // Enfoca en la cara
+    imageScale: 1.75, // Zoom para enfocar más en la cara
   },
   {
     name: 'Nami',
@@ -32,7 +35,9 @@ const pets = [
     drawing: namiDrawing.src,
     behavior: 'Buena',
     gender: 'H',
-    info: 'Duis aute irure dolor in reprehenderit in voluptate.',
+    info: 'Este año he sido muy muy buena y por eso quiero que me traigais muchos juguetes nuevos, y más gatitos para jugar, y otro perrito, y más perritos. Y también premios y que me lleven a casa de la abuela a jugar con Lucky y que me lleven al campo a jugar con los otros perros y a correr y al parque a ver más perros y a la calle a ver más perros y a jugar con todos los perritos del mundo.',
+    imagePosition: '45% 40%', // Posición personalizada con porcentajes
+    imageScale: 2.2, // Zoom personalizado
   },
 ];
 
@@ -40,11 +45,11 @@ export const PetsSection: FC = () => {
   return (
     <Stack gap={2} alignItems="center" sx={{ width: '100%' }}>
       <Typography
-        variant="h5"
-        component="h2"
-        sx={{ typography: { xs: 'h6', md: 'h5', lg: 'h4' } }}
+        variant="h4"
+        fontWeight={800}
+        sx={{ textDecoration: 'underline' }}
       >
-        Invitados de honor
+        Los damitos
       </Typography>
       <Stack
         gap={3}
@@ -93,7 +98,9 @@ export const PetsSection: FC = () => {
                     height={160}
                     style={{
                       objectFit: 'cover',
-                      objectPosition: 'center',
+                      objectPosition: pet.imagePosition,
+                      transform: `scale(${pet.imageScale || 1})`,
+                      transformOrigin: pet.imagePosition, // Usar la misma posición para el origen del transform
                     }}
                   />
                 </Box>
@@ -111,7 +118,6 @@ export const PetsSection: FC = () => {
                     {pet.name}
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 0.3 }}>
-                    <strong>Comportamiento:</strong>{' '}
                     {pet.name === 'Bilbo' ? (
                       <Box component="span" sx={{ position: 'relative' }}>
                         <Box
@@ -148,8 +154,12 @@ export const PetsSection: FC = () => {
 
               {/* Información adicional */}
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  <strong>Sobre mí:</strong> {pet.info}
+                <Typography
+                  sx={{ mb: 1 }}
+                  fontFamily='"Caveat", cursive'
+                  color="#000000"
+                >
+                  <strong>Queridos reyes magos:</strong> {pet.info}
                 </Typography>
               </Box>
 

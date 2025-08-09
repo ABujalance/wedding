@@ -63,6 +63,7 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
             id: g.id,
             confirmed: g.confirmed,
             allergies: g.allergies,
+            song: g.song,
             dish: g.dish,
           })),
         }),
@@ -204,6 +205,16 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                     value={g.allergies || ''}
                     onChange={(e) =>
                       updateGuest(g.id, { allergies: e.target.value })
+                    }
+                    sx={{ minWidth: 220, mt: 1 }}
+                  />
+
+                  <TextField
+                    label="Canción que no puede faltar"
+                    placeholder="Canción - Artista"
+                    value={g.song || ''}
+                    onChange={(e) =>
+                      updateGuest(g.id, { song: e.target.value })
                     }
                     sx={{ minWidth: 220, mt: 1 }}
                   />

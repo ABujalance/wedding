@@ -152,6 +152,26 @@ export const PhotoCarousel: FC<PhotoCarouselProps> = ({ images }) => {
               padding: { xs: 1, md: 1.5 },
               display: 'flex',
               flexDirection: 'column',
+              // Animación de pulso solo en móvil para la imagen central
+              ...(position === 'current' && {
+                '@media (max-width: 768px)': {
+                  animation: 'pulse 2s infinite',
+                  '@keyframes pulse': {
+                    '0%': {
+                      transform: 'translateX(-50%) rotate(0deg) scale(1)',
+                      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                    },
+                    '50%': {
+                      transform: 'translateX(-50%) rotate(0deg) scale(1.02)',
+                      boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+                    },
+                    '100%': {
+                      transform: 'translateX(-50%) rotate(0deg) scale(1)',
+                      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                    },
+                  },
+                },
+              }),
               '&:hover':
                 position !== 'current'
                   ? {
@@ -162,7 +182,13 @@ export const PhotoCarousel: FC<PhotoCarouselProps> = ({ images }) => {
                           ? 'rotate(8deg) scale(0.9)'
                           : undefined,
                     }
-                  : {},
+                  : {
+                      // Solo efecto hover en desktop
+                      '@media (min-width: 769px)': {
+                        transform: 'translateX(-50%) rotate(0deg) scale(1.05)',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                      },
+                    },
               ...getPolaroidStyle(position),
             }}
             onClick={() => {

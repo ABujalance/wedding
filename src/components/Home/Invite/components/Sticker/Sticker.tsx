@@ -34,8 +34,27 @@ export const Sticker: FC<StickerProps> = ({
         transform: `rotate(${rotation}deg)`,
         transition: 'all 0.3s ease',
 
+        // Animación de pulso solo en móvil
+        '@media (max-width: 768px)': {
+          animation: 'stickerPulse 2.5s infinite',
+          '@keyframes stickerPulse': {
+            '0%': {
+              transform: `rotate(${rotation}deg) scale(1)`,
+            },
+            '50%': {
+              transform: `rotate(${rotation}deg) scale(1.1)`,
+            },
+            '100%': {
+              transform: `rotate(${rotation}deg) scale(1)`,
+            },
+          },
+        },
+
         '&:hover': {
-          transform: `rotate(${rotation}deg) scale(1.3)`,
+          // Solo efecto hover en desktop
+          '@media (min-width: 769px)': {
+            transform: `rotate(${rotation}deg) scale(1.3)`,
+          },
         },
       }}
     >

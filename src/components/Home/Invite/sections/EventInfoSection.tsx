@@ -78,7 +78,7 @@ export const EventInfoSection: FC = () => {
             '&::after': {
               content: '""',
               position: 'absolute',
-              bottom: 100,
+              bottom: 0,
               left: 0,
               width: 160,
               height: 160,

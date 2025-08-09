@@ -101,6 +101,17 @@ export const GuestDetailModal: FC<GuestDetailModalProps> = ({ guest }) => {
                     </Typography>
                   </Box>
                 )}
+
+                {guest.song && (
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Canción
+                    </Typography>
+                    <Typography variant="body1" color="primary">
+                      {guest.song}
+                    </Typography>
+                  </Box>
+                )}
               </Stack>
             </CardContent>
           </Card>

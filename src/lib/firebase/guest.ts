@@ -34,6 +34,7 @@ export interface Guest {
   id: string;
   fullName: string;
   allergies?: string;
+  song?: string;
   busOrigin?: BusOrigin;
   confirmed?: boolean;
   isChild?: boolean;
@@ -60,6 +61,7 @@ function mapGuest(
     fullName: data.fullName,
     lastUpdate: data.lastUpdate ? new Date(data.lastUpdate) : new Date(),
     allergies: data.allergies,
+    song: data.song,
     busOrigin: data.busOrigin,
     confirmed: data.confirmed,
     isChild: data.isChild,

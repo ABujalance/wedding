@@ -156,6 +156,7 @@ export const GuestList: FC<GuestListProps> = ({
         (row) =>
           row.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
           row.allergies?.toLowerCase().includes(searchText.toLowerCase()) ||
+          row.song?.toLowerCase().includes(searchText.toLowerCase()) ||
           row.busOrigin?.toLowerCase().includes(searchText.toLowerCase()) ||
           row.group?.toLowerCase().includes(searchText.toLowerCase()),
       );
@@ -176,6 +177,7 @@ export const GuestList: FC<GuestListProps> = ({
       id: newId,
       fullName: '',
       allergies: '',
+      song: '',
       busOrigin: undefined,
       confirmed: false,
       isChild: false,
@@ -432,6 +434,12 @@ export const GuestList: FC<GuestListProps> = ({
             field: 'allergies',
             flex: 1,
             headerName: 'Alergias',
+            editable: true,
+          },
+          {
+            field: 'song',
+            flex: 1,
+            headerName: 'Canción',
             editable: true,
           },
           {

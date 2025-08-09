@@ -1,5 +1,14 @@
 'use client';
-import { Card, CardContent, Stack, Typography, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Stack,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FC, useState } from 'react';
 
@@ -18,7 +27,10 @@ const items = [
 export const AdditionalInfoCards: FC = () => {
   const [hasBeenExpanded, setHasBeenExpanded] = useState(false);
 
-  const handleAccordionChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
+  const handleAccordionChange = (
+    event: React.SyntheticEvent,
+    isExpanded: boolean,
+  ) => {
     if (isExpanded && !hasBeenExpanded) {
       setHasBeenExpanded(true);
     }
@@ -43,24 +55,26 @@ export const AdditionalInfoCards: FC = () => {
       >
         <AccordionSummary
           expandIcon={
-            <ExpandMoreIcon 
-              sx={{ 
+            <ExpandMoreIcon
+              sx={{
                 fontSize: 28,
-                ...(hasBeenExpanded ? {} : {
-                  animation: 'bounce 2s infinite',
-                  '@keyframes bounce': {
-                    '0%, 20%, 50%, 80%, 100%': {
-                      transform: 'translateY(0)',
-                    },
-                    '40%': {
-                      transform: 'translateY(-8px)',
-                    },
-                    '60%': {
-                      transform: 'translateY(-4px)',
-                    },
-                  },
-                })
-              }} 
+                ...(hasBeenExpanded
+                  ? {}
+                  : {
+                      animation: 'bounce 2s infinite',
+                      '@keyframes bounce': {
+                        '0%, 20%, 50%, 80%, 100%': {
+                          transform: 'translateY(0)',
+                        },
+                        '40%': {
+                          transform: 'translateY(-8px)',
+                        },
+                        '60%': {
+                          transform: 'translateY(-4px)',
+                        },
+                      },
+                    }),
+              }}
             />
           }
           aria-controls="preguntas-comunes-content"
@@ -90,9 +104,9 @@ export const AdditionalInfoCards: FC = () => {
               Preguntas comunes
             </Typography>
             {!hasBeenExpanded && (
-              <Typography 
-                variant="body2" 
-                sx={{ 
+              <Typography
+                variant="body2"
+                sx={{
                   color: '#666',
                   fontStyle: 'italic',
                 }}
@@ -102,7 +116,7 @@ export const AdditionalInfoCards: FC = () => {
             )}
           </Box>
         </AccordionSummary>
-        
+
         <AccordionDetails
           sx={{
             backgroundColor: 'transparent',
@@ -138,9 +152,9 @@ export const AdditionalInfoCards: FC = () => {
                 }}
               >
                 <CardContent>
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
+                  <Typography
+                    variant="h6"
+                    sx={{
                       fontWeight: 600,
                       mb: 1,
                     }}
