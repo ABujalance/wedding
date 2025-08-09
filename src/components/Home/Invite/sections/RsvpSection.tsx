@@ -12,8 +12,14 @@ import {
   Stack,
   TextField,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText,
 } from '@mui/material';
 import { FC, useCallback, useEffect, useState } from 'react';
+import { SectionSeparator } from '@/components/Home/Invite/components/SectionSeparator';
+import { BusInfo } from '@/components/Home/Invite/BusInfo/BusInfo';
 
 interface RsvpSectionProps {
   invite: Invite;
@@ -27,9 +33,26 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
   const [guests, setGuests] = useState<Guest[]>(initialGuests);
   const [saving, setSaving] = useState(false);
   const [notes, setNotes] = useState(invite.notes || '');
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, boolean>
+  >({});
   const inviteId = invite.id;
 
   const submitAll = useCallback(async () => {
+    // Validar que todos los huéspedes confirmados tengan plato seleccionado
+    const errors: Record<string, boolean> = {};
+    guests.forEach((guest) => {
+      if (guest.confirmed && !guest.isChild && !guest.dish) {
+        errors[guest.id] = true;
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
+    setValidationErrors({});
     setSaving(true);
     try {
       const guestsRes = await fetch(`/api/invites/${inviteId}/guests`, {
@@ -76,74 +99,22 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
     setGuests((prev) =>
       prev.map((g) => (g.id === id ? { ...g, ...patch } : g)),
     );
+    // Limpiar error de validación cuando se selecciona un plato
+    if (patch.dish) {
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[id];
+        return newErrors;
+      });
+    }
   };
 
   return (
     <Stack gap={4} sx={{ width: '100%', maxWidth: '100%' }} id="rsvp-section">
-      {/* Separador decorativo */}
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          my: 4,
-        }}
-      >
-        <Box
-          sx={{
-            flex: 1,
-            height: '2px',
-            background:
-              'linear-gradient(90deg, transparent, #BD9E24, transparent)',
-          }}
-        />
-        <Box
-          sx={{
-            padding: '12px 24px',
-            backgroundColor: '#BD9E24',
-            borderRadius: 50,
-            boxShadow: '0 4px 12px rgba(189, 158, 36, 0.3)',
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'white',
-              fontWeight: 600,
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              fontFamily: '"Limelight", serif',
-              fontSize: '0.9rem',
-            }}
-          >
-            Confirmación
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            height: '2px',
-            background:
-              'linear-gradient(90deg, transparent, #BD9E24, transparent)',
-          }}
-        />
-      </Box>
+      <SectionSeparator title="Confirmación" />
 
-      <Typography
-        variant="h3"
-        component="h2"
-        textAlign="center"
-        sx={{
-          typography: { xs: 'h4', md: 'h3' },
-          fontFamily: '"Caveat", cursive',
-          color: '#BD9E24',
-          fontWeight: 700,
-          mb: 2,
-        }}
-      >
-        Confirmación de asistencia
-      </Typography>
+      {/* Información de buses */}
+      <BusInfo guests={guests} />
 
       <Stack gap={2} sx={{ width: '100%' }}>
         {guests.map((g) => (
@@ -194,26 +165,42 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                       Menú infantil asignado
                     </Typography>
                   ) : (
-                    <TextField
-                      select
-                      label="Plato principal"
-                      value={g.dish || ''}
-                      onChange={(e) =>
-                        updateGuest(g.id, { dish: e.target.value as Dish })
-                      }
+                    <FormControl
                       sx={{ minWidth: 220, mt: 1 }}
+                      error={validationErrors[g.id]}
                     >
-                      <MenuItem value="marisco">
-                        Arroz con gambón austral (Marisco)
-                      </MenuItem>
-                      <MenuItem value="carne">
-                        Arroz de rabo de toro (Carne)
-                      </MenuItem>
-                    </TextField>
+                      <InputLabel id={`dish-label-${g.id}`}>
+                        Plato principal
+                      </InputLabel>
+                      <Select
+                        labelId={`dish-label-${g.id}`}
+                        value={g.dish || ''}
+                        label="Plato principal"
+                        onChange={(e) =>
+                          updateGuest(g.id, { dish: e.target.value as Dish })
+                        }
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>Selecciona un plato</em>
+                        </MenuItem>
+                        <MenuItem value="marisco">
+                          Arroz con gambón austral (Marisco)
+                        </MenuItem>
+                        <MenuItem value="carne">
+                          Arroz de rabo de toro (Carne)
+                        </MenuItem>
+                      </Select>
+                      {validationErrors[g.id] && (
+                        <FormHelperText>
+                          Por favor selecciona un plato
+                        </FormHelperText>
+                      )}
+                    </FormControl>
                   )}
 
                   <TextField
-                    label="Alergias"
+                    label="Alergias o intolerancias"
                     value={g.allergies || ''}
                     onChange={(e) =>
                       updateGuest(g.id, { allergies: e.target.value })
@@ -243,28 +230,39 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
         </CardContent>
       </Card>
 
+      {/* Fecha límite con diseño más visible pero sutil */}
       <Box
         sx={{
-          bgcolor: 'rgba(189, 158, 36, 0.08)',
-          border: '1px solid rgba(189, 158, 36, 0.5)',
-          borderRadius: 2,
-          p: { xs: 1.5, sm: 2 },
+          background: 'linear-gradient(135deg, #FFF3CD, #FCE4B6)',
+          border: '2px solid #F0AD4E',
+          borderRadius: 3,
+          p: 3,
           textAlign: 'center',
           width: '100%',
           maxWidth: '100%',
           boxSizing: 'border-box',
+          boxShadow: '0 4px 16px rgba(240, 173, 78, 0.2)',
+          position: 'relative',
         }}
       >
         <Typography
           sx={{
-            typography: 'h6',
+            typography: { xs: 'body1', md: 'h6' },
             fontWeight: 600,
-            color: '#8B6B1A',
-            wordBreak: 'break-word',
-            hyphens: 'auto',
+            color: '#8A6914',
+            mb: 0.5,
           }}
         >
-          Fecha límite para confirmar: 14 de noviembre de 2025
+          ⚠️ Fecha límite para confirmar
+        </Typography>
+        <Typography
+          sx={{
+            typography: { xs: 'h6', md: 'h5' },
+            fontWeight: 700,
+            color: '#D58512',
+          }}
+        >
+          14 de noviembre de 2025
         </Typography>
       </Box>
 

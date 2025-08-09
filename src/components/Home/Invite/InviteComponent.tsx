@@ -2,7 +2,6 @@ import { Guest } from '@/lib/firebase/guest';
 import { Invite } from '@/lib/firebase/invites';
 import { Box, Stack } from '@mui/material';
 import { FC, use } from 'react';
-import { BusInfo } from './BusInfo/BusInfo';
 import { InviteHeader } from '@/components/Home/Invite/sections/InviteHeader';
 import { PhotoCarousel } from '@/components/Home/Invite/sections/PhotoCarousel';
 import { StorySection } from '@/components/Home/Invite/sections/StorySection';
@@ -64,10 +63,6 @@ export const InviteComponent: FC<InviteComponentProps> = ({
 
       <Box paddingX={{ lg: '15%' }}>
         <StorySection />
-      </Box>
-
-      <Box paddingX={{ lg: '15%' }}>
-        <BusInfo guests={guests} />
       </Box>
 
       <Box paddingX={{ lg: '15%' }}>

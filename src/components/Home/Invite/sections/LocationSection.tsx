@@ -34,8 +34,6 @@ export const LocationSection: FC = () => {
       >
         Hacienda Los Frailes de San Alberto
       </Typography>
-      <LocationSticker href={mapsUrl} />
-
       {/* Contenedor de fotos superpuestas */}
       <Box
         sx={{
@@ -119,6 +117,8 @@ export const LocationSection: FC = () => {
           />
         </Box>
       </Box>
+
+      <LocationSticker href={mapsUrl} />
 
       {/* Modal para mostrar imagen en grande */}
       <Modal

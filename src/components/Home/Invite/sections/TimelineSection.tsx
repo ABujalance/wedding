@@ -1,14 +1,13 @@
 'use client';
-import { Stack, Typography, Box } from '@mui/material';
-import { FC } from 'react';
 import timeline from '@/assets/images/timeline.png';
+import { Box, Stack } from '@mui/material';
+import { FC } from 'react';
+import { SectionSeparator } from '../components/SectionSeparator';
 
 export const TimelineSection: FC = () => {
   return (
     <Stack gap={2} alignItems="center">
-      <Typography variant="h2" fontWeight={800}>
-        Horario
-      </Typography>
+      <SectionSeparator title="Horario" />
       <Box
         component="img"
         src={timeline.src}

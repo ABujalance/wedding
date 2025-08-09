@@ -74,7 +74,7 @@ export const FloatingRsvpButton: FC = () => {
             fontWeight: 600,
           }}
         >
-          Confirmación
+          Confirmar asistencia
         </Typography>
       </Fab>
     </Zoom>
