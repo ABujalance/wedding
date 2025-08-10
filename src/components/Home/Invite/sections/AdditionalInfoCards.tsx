@@ -34,14 +34,19 @@ const faqData: FAQCardData[] = [
   },
   {
     title: 'Regalos',
-    content: `La navidad es una época para regalar y sabemos que muchos de vosotros queréis
-     contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos`,
+    content: `La navidad es una época para regalar y sabemos que muchos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos, para nosotros esta boda es un momento de celebración.<br><br>Si aún sabiendo esto queréis hacernos un regalo:
+    <div class="spoiler">
+      <div class="spoiler-content">
+        <strong>Cuenta bancaria:</strong><br>
+        ES12 3456 7890 1234 5678 9012<br>
+      </div>
+    </div>`,
     image: GiftImage,
     imageAlt: 'Regalos',
   },
   {
     title: 'Contacto',
-    content: `Si hay algo que queráis decirnos, podéis usar los comentarios del formulario para hacerlo, es la forma más rápida para nosotros. Sin embargo, para cualquier cosa que podáis necesitar o si preferis no usar el formulario, podéis contactarnos en los situientes núnmeros: Verónica - 661150019 ; Alberto - 689355643`,
+    content: `Si hay algo que queráis decirnos, podéis usar los comentarios del formulario para hacerlo, es la forma más rápida para nosotros.<br><br>Sin embargo, para cualquier cosa que podáis necesitar o si preferís no usar el formulario, podéis contactarnos en los siguientes números:<br><br><strong>Verónica:</strong> 661 150 019<br><strong>Alberto:</strong> 689 355 643`,
     image: ContactImage,
     imageAlt: 'Contacto',
   },

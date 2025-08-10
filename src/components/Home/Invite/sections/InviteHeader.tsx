@@ -12,7 +12,7 @@ export const InviteHeader: FC<{ displayName: string }> = ({ displayName }) => {
         sx={{ color: '#BD9E24' }}
         fontFamily='"Parisienne", serif'
       >
-        Invitación para {displayName}
+        Invitación de {displayName}
       </ShiningText>
     </Stack>
   );

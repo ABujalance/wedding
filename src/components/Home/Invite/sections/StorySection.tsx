@@ -21,9 +21,12 @@ export const StorySection: FC = () => {
           textAlign: 'center',
         }}
       >
-        Empezamos esta aventura hace muchos años y ahora queremos celebrarlo con
-        vosotros. Estamos deseando compartir este día tan especial con las
-        personas que más queremos. ¡Será una fiesta increíble!
+        ¡Hola! Estamos muy emocionados de poder compartir este gran día con
+        todos vosotros. Para nosotros es muy importante poder estar con toda la
+        gente a la que queremos en un solo lugar y esperamos que para vosotros
+        también sea un día especial. A ambos nos encanta la navidad y queremos
+        que este día sea una gran comida familiar de navidad para todos, ¡con
+        fiesta incluida!
       </Typography>
 
       {/* Tarjetas del novio y la novia */}

@@ -53,7 +53,7 @@ export const InviteComponent: FC<InviteComponentProps> = ({
             { src: nosotros8.src, alt: 'DLP 2025. Thunder Mesa cerrada :(' },
             { src: nosotros9.src, alt: 'Disfrutando la navidad' },
             { src: nosotros10.src, alt: 'En la sierra con Nami!' },
-            { src: nosotros11.src, alt: 'De comunión :P' },
+            { src: nosotros11.src, alt: 'De comunión' },
             { src: nosotros12.src, alt: 'Crucero por los Fiordos!' },
             { src: nosotros13.src, alt: 'DLP 2025' },
             { src: nosotros14.src, alt: 'Japón 2023 ⛩️' },

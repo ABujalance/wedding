@@ -22,11 +22,17 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body style={{ margin: 0, padding: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <body
+        style={{
+          margin: 0,
+          padding: 0,
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <ReCaptchaProvider>
-          <div style={{ flex: 1 }}>
-            {children}
-          </div>
+          <div style={{ flex: 1 }}>{children}</div>
           <ReCaptchaDisclaimer />
         </ReCaptchaProvider>
       </body>
