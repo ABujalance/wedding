@@ -182,9 +182,6 @@ export const RsvpSection: FC<RsvpSectionProps> = ({
                         }
                         displayEmpty
                       >
-                        <MenuItem value="">
-                          <em>Selecciona un plato</em>
-                        </MenuItem>
                         <MenuItem value="marisco">
                           Arroz con gambón austral (Marisco)
                         </MenuItem>
