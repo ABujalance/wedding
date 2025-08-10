@@ -116,16 +116,31 @@ export const StatsPanel: FC<StatsPanelProps> = ({ adminTokenId }) => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Platos Elegidos
+                Platos Elegidos (Solo Confirmados)
               </Typography>
-              {Object.entries(stats.dishCounts).map(([dish, count]) => (
-                <Box key={dish} sx={{ mb: 1 }}>
-                  <Typography variant="body2">
-                    {dish === 'marisco' ? 'Marisco' : 'Carne'}:{' '}
-                    <strong>{count}</strong>
-                  </Typography>
-                </Box>
-              ))}
+              {Object.entries(stats.dishCounts).length > 0 ? (
+                Object.entries(stats.dishCounts).map(([dish, count]) => (
+                  <Box key={dish} sx={{ mb: 1 }}>
+                    <Typography variant="body2">
+                      {dish === 'marisco' ? 'Marisco' : 'Carne'}:{' '}
+                      <strong>{count}</strong>
+                    </Typography>
+                  </Box>
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No hay platos seleccionados aún
+                </Typography>
+              )}
+              <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Total de platos:{' '}
+                  {Object.values(stats.dishCounts).reduce(
+                    (sum, count) => sum + count,
+                    0,
+                  )}
+                </Typography>
+              </Box>
             </CardContent>
           </Card>
         </Grid>

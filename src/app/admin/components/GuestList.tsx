@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { Guest, Group } from '@/lib/firebase/guest';
 import { Invite } from '@/lib/firebase/invites';
@@ -5,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Button,
   Stack,
@@ -15,6 +17,15 @@ import {
   FormControl,
   InputLabel,
   Autocomplete,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  IconButton,
+  Switch,
+  FormControlLabel,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   DataGrid,
@@ -28,7 +39,7 @@ import { FC, useCallback, useState, useEffect, useMemo } from 'react';
 type GuestListProps = {
   guests: Guest[];
   adminTokenId: string;
-  onGuestDetail?: (guest: Guest) => void;
+
   onGuestsUpdate?: (guests: Guest[]) => void;
   selectedInviteId?: string; // Para cuando se añaden invitados desde una invitación específica
 };
@@ -170,10 +181,155 @@ const InviteEditCell = ({
   );
 };
 
+// Componente para el formulario de detalle del invitado
+const GuestDetailForm: FC<{
+  guest: Guest;
+  invites: Invite[];
+  onSave: (guest: Guest) => void;
+  onCancel: () => void;
+}> = ({ guest, invites, onSave, onCancel }) => {
+  const [editedGuest, setEditedGuest] = useState<Guest>({ ...guest });
+
+  const handleInputChange = (field: keyof Guest, value: any) => {
+    setEditedGuest((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    onSave(editedGuest);
+  };
+
+  return (
+    <Stack spacing={3} sx={{ mt: 2 }}>
+      <TextField
+        label="Nombre completo"
+        value={editedGuest.fullName}
+        onChange={(e) => handleInputChange('fullName', e.target.value)}
+        fullWidth
+      />
+
+      <Autocomplete
+        options={invites}
+        getOptionLabel={(invite) => `${invite.id} - ${invite.displayName}`}
+        value={invites.find((inv) => inv.id === editedGuest.inviteId) || null}
+        onChange={(_, newValue) =>
+          handleInputChange('inviteId', newValue?.id || '')
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Invitación"
+            placeholder="Buscar invitación..."
+          />
+        )}
+        isOptionEqualToValue={(option, value) => option.id === value?.id}
+      />
+
+      <TextField
+        label="Alergias"
+        value={editedGuest.allergies || ''}
+        onChange={(e) => handleInputChange('allergies', e.target.value)}
+        fullWidth
+        multiline
+        rows={2}
+      />
+
+      <TextField
+        label="Canción"
+        value={editedGuest.song || ''}
+        onChange={(e) => handleInputChange('song', e.target.value)}
+        fullWidth
+      />
+
+      <FormControl fullWidth>
+        <InputLabel>Bus</InputLabel>
+        <Select
+          value={editedGuest.busOrigin || ''}
+          onChange={(e) => handleInputChange('busOrigin', e.target.value)}
+          label="Bus"
+        >
+          <MenuItem value="">Sin bus</MenuItem>
+          <MenuItem value="Sevilla">Sevilla</MenuItem>
+          <MenuItem value="Huelva">Huelva</MenuItem>
+          <MenuItem value="Lucena">Lucena</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl fullWidth>
+        <InputLabel>Plato</InputLabel>
+        <Select
+          value={editedGuest.dish || ''}
+          onChange={(e) => handleInputChange('dish', e.target.value)}
+          label="Plato"
+        >
+          <MenuItem value="">Sin especificar</MenuItem>
+          <MenuItem value="marisco">Marisco</MenuItem>
+          <MenuItem value="carne">Carne</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl fullWidth>
+        <InputLabel>Grupo</InputLabel>
+        <Select
+          value={editedGuest.group || ''}
+          onChange={(e) => handleInputChange('group', e.target.value as Group)}
+          label="Grupo"
+        >
+          <MenuItem value="">Sin grupo</MenuItem>
+          <MenuItem value="Novios">Novios</MenuItem>
+          <MenuItem value="Familia Alberto Bujalance Muñoz">
+            Familia Alberto Bujalance Muñoz
+          </MenuItem>
+          <MenuItem value="Familia Verónica">Familia Verónica</MenuItem>
+          <MenuItem value="Sevilla">Sevilla</MenuItem>
+          <MenuItem value="Amigos Alberto Bujalance Muñoz">
+            Amigos Alberto Bujalance Muñoz
+          </MenuItem>
+          <MenuItem value="Amigos comunes">Amigos comunes</MenuItem>
+          <MenuItem value="Amigos Padres Alberto">
+            Amigos Padres Alberto
+          </MenuItem>
+          <MenuItem value="Amigos Padres Vero">Amigos Padres Vero</MenuItem>
+          <MenuItem value="Amigos Verónica">Amigos Verónica</MenuItem>
+          <MenuItem value="Marchanes">Marchanes</MenuItem>
+        </Select>
+      </FormControl>
+
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={editedGuest.confirmed}
+              onChange={(e) => handleInputChange('confirmed', e.target.checked)}
+            />
+          }
+          label="Confirmado"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={editedGuest.isChild}
+              onChange={(e) => handleInputChange('isChild', e.target.checked)}
+            />
+          }
+          label="Es niño"
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 3 }}>
+        <Button onClick={onCancel} variant="outlined">
+          Cancelar
+        </Button>
+        <Button onClick={handleSave} variant="contained">
+          Guardar Cambios
+        </Button>
+      </Box>
+    </Stack>
+  );
+};
+
 export const GuestList: FC<GuestListProps> = ({
   guests,
   adminTokenId,
-  onGuestDetail,
   onGuestsUpdate,
   selectedInviteId,
 }) => {
@@ -183,6 +339,13 @@ export const GuestList: FC<GuestListProps> = ({
   const [searchText, setSearchText] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<Group | ''>('');
   const [invites, setInvites] = useState<Invite[]>([]);
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
+  const [guestDetailOpen, setGuestDetailOpen] = useState(false);
+
+  // Breakpoints para responsive design
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'));
 
   // Actualizar rows cuando cambien los guests del prop
   useEffect(() => {
@@ -276,6 +439,40 @@ export const GuestList: FC<GuestListProps> = ({
     },
     [adminTokenId, rows, onGuestsUpdate],
   );
+
+  // Funciones para el modal de detalle
+  const handleViewGuestDetail = (guest: Guest) => {
+    setSelectedGuest(guest);
+    setGuestDetailOpen(true);
+  };
+
+  const handleCloseGuestDetail = () => {
+    setGuestDetailOpen(false);
+    setSelectedGuest(null);
+  };
+
+  const handleSaveGuestDetail = async (updatedGuest: Guest) => {
+    try {
+      // Guardar los cambios en el backend
+      await saveGuest(updatedGuest.id, { ...updatedGuest }, adminTokenId);
+
+      // Actualizar la lista local
+      const updatedRows = rows.map((row) =>
+        row.id === updatedGuest.id ? updatedGuest : row,
+      );
+      setRows(updatedRows);
+
+      // Notificar al componente padre
+      if (onGuestsUpdate) {
+        onGuestsUpdate(updatedRows);
+      }
+
+      // Cerrar el modal
+      handleCloseGuestDetail();
+    } catch (error) {
+      console.error('Error saving guest details:', error);
+    }
+  };
 
   // Función para quitar la asignación de invitación
   const handleRemoveFromInvite = useCallback(
@@ -409,6 +606,172 @@ export const GuestList: FC<GuestListProps> = ({
     return { ...newRow, lastUpdate: new Date() }; // Asegurar que siempre devolvemos un Date válido
   };
 
+  // Generar columnas según el breakpoint
+  const getColumns = (): any[] => {
+    const baseColumns: any[] = [
+      {
+        field: 'fullName',
+        flex: 1,
+        headerName: 'Nombre completo',
+        editable: true,
+      },
+      {
+        field: 'inviteId',
+        flex: 1,
+        headerName: 'Invitación',
+        editable: true,
+        renderEditCell: (params: GridRenderEditCellParams) => (
+          <InviteEditCell {...params} adminTokenId={adminTokenId} />
+        ),
+        valueFormatter: (value: string) => {
+          const invite = invites.find((inv) => inv.id === value);
+          return invite ? `${invite.id} - ${invite.displayName}` : value || '';
+        },
+      },
+      {
+        field: 'confirmed',
+        flex: 1,
+        headerName: 'Confirmado',
+        editable: true,
+        type: 'boolean',
+      },
+    ];
+
+    const tabletColumns: any[] = [
+      {
+        field: 'busOrigin',
+        flex: 1,
+        headerName: 'Bus',
+        editable: true,
+        type: 'singleSelect',
+        valueOptions: ['Sevilla', 'Huelva', 'Lucena'],
+      },
+    ];
+
+    const desktopColumns: any[] = [
+      {
+        field: 'allergies',
+        flex: 1,
+        headerName: 'Alergias',
+        editable: true,
+      },
+      {
+        field: 'song',
+        flex: 1,
+        headerName: 'Canción',
+        editable: true,
+      },
+      {
+        field: 'isChild',
+        flex: 1,
+        headerName: 'Niño',
+        editable: true,
+        type: 'boolean',
+      },
+      {
+        field: 'dish',
+        flex: 1,
+        headerName: 'Plato',
+        editable: true,
+        type: 'singleSelect',
+        valueOptions: ['marisco', 'carne'],
+      },
+      {
+        field: 'group',
+        flex: 1,
+        headerName: 'Grupo',
+        editable: true,
+        type: 'singleSelect',
+        valueOptions: [
+          'Novios',
+          'Familia Alberto Bujalance Muñoz',
+          'Familia Verónica',
+          'Sevilla',
+          'Amigos Alberto Bujalance Muñoz',
+          'Amigos comunes',
+          'Amigos Padres Alberto',
+          'Amigos Padres Vero',
+          'Amigos Verónica',
+          'Marchanes',
+        ],
+      },
+      {
+        field: 'lastUpdate',
+        flex: 1,
+        headerName: 'Última actualización',
+        type: 'dateTime',
+        editable: false,
+        valueGetter: (value: Date | string | number | null | undefined) => {
+          if (!value) return null;
+          if (value instanceof Date) return value;
+          if (typeof value === 'string' || typeof value === 'number') {
+            const date = new Date(value);
+            return isNaN(date.getTime()) ? null : date;
+          }
+          return null;
+        },
+      },
+    ];
+
+    // Construir columnas según el breakpoint
+    let columns = [...baseColumns];
+
+    if (!isMobile) {
+      columns.splice(3, 0, ...tabletColumns); // Añadir columnas de tablet después de 'confirmed'
+    }
+
+    if (!isMobile && !isTablet) {
+      columns = [...columns, ...desktopColumns]; // Añadir columnas de desktop al final
+    }
+
+    // Columna de acciones (siempre presente)
+    columns.push({
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Acciones',
+      width: 150,
+      cellClassName: 'actions',
+
+      getActions: ({ id, row }: { id: any; row: Guest }) => {
+        const actions = [
+          <GridActionsCellItem
+            key="view"
+            icon={<VisibilityIcon />}
+            label="Ver Detalle"
+            onClick={() => handleViewGuestDetail(row)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            key="delete"
+            icon={<DeleteIcon />}
+            label="Eliminar"
+            onClick={() => handleDeleteGuest(id as string, row.fullName)}
+            color="inherit"
+          />,
+        ];
+
+        // Solo mostrar el botón de quitar de invitación si estamos en el contexto de una invitación específica
+        if (selectedInviteId && row.inviteId === selectedInviteId) {
+          actions.splice(
+            1,
+            0,
+            <GridActionsCellItem
+              key="remove"
+              icon={<RemoveCircleIcon />}
+              label="Quitar de invitación"
+              onClick={() => handleRemoveFromInvite(id as string, row.fullName)}
+              color="inherit"
+            />,
+          );
+        }
+
+        return actions;
+      },
+    });
+
+    return columns;
+  };
+
   return (
     <Stack spacing={2}>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -467,154 +830,43 @@ export const GuestList: FC<GuestListProps> = ({
         processRowUpdate={processRowUpdate}
         // Manejo de errores de actualización si lo necesitas (opcional)
         // onProcessRowUpdateError={(error) => console.error(error)}
-        columns={[
-          {
-            field: 'fullName',
-            flex: 1,
-            headerName: 'Nombre completo',
-            editable: true,
-          },
-          {
-            field: 'inviteId',
-            flex: 1,
-            headerName: 'Invitación',
-            editable: true,
-            renderEditCell: (params) => (
-              <InviteEditCell {...params} adminTokenId={adminTokenId} />
-            ),
-            valueFormatter: (value: string) => {
-              const invite = invites.find((inv) => inv.id === value);
-              return invite
-                ? `${invite.id} - ${invite.displayName}`
-                : value || '';
-            },
-          },
-          {
-            field: 'allergies',
-            flex: 1,
-            headerName: 'Alergias',
-            editable: true,
-          },
-          {
-            field: 'song',
-            flex: 1,
-            headerName: 'Canción',
-            editable: true,
-          },
-          {
-            field: 'busOrigin',
-            flex: 1,
-            headerName: 'Bus',
-            editable: true,
-            type: 'singleSelect',
-            valueOptions: ['Sevilla', 'Huelva', 'Lucena'],
-          },
-          {
-            field: 'confirmed',
-            flex: 1,
-            headerName: 'Confirmado',
-            editable: true,
-            type: 'boolean',
-          },
-          {
-            field: 'isChild',
-            flex: 1,
-            headerName: 'Niño',
-            editable: true,
-            type: 'boolean',
-          },
-          {
-            field: 'dish',
-            flex: 1,
-            headerName: 'Plato',
-            editable: true,
-            type: 'singleSelect',
-            valueOptions: ['marisco', 'carne'],
-          },
-          {
-            field: 'group',
-            flex: 1,
-            headerName: 'Grupo',
-            editable: true,
-            type: 'singleSelect',
-            valueOptions: [
-              'Novios',
-              'Familia Alberto Bujalance Muñoz',
-              'Familia Verónica',
-              'Sevilla',
-              'Amigos Alberto Bujalance Muñoz',
-              'Amigos comunes',
-              'Amigos Padres Alberto',
-              'Amigos Padres Vero',
-              'Amigos Verónica',
-              'Marchanes',
-            ],
-          },
-          {
-            field: 'lastUpdate',
-            flex: 1,
-            headerName: 'Última actualización',
-            type: 'dateTime',
-            valueGetter: (value: Date | string | number | null | undefined) => {
-              // Asegurar que siempre devolvemos un Date válido o null
-              if (!value) return null;
-              if (value instanceof Date) return value;
-              if (typeof value === 'string' || typeof value === 'number') {
-                const date = new Date(value);
-                return isNaN(date.getTime()) ? null : date;
-              }
-              return null;
-            },
-          },
-          {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Acciones',
-            width: 150,
-            cellClassName: 'actions',
-            getActions: ({ id, row }) => {
-              const actions = [
-                <GridActionsCellItem
-                  key="delete"
-                  icon={<DeleteIcon />}
-                  label="Eliminar"
-                  onClick={() => handleDeleteGuest(id as string, row.fullName)}
-                  color="inherit"
-                />,
-              ];
-
-              // Solo mostrar el botón de quitar de invitación si estamos en el contexto de una invitación específica
-              if (selectedInviteId && row.inviteId === selectedInviteId) {
-                actions.unshift(
-                  <GridActionsCellItem
-                    key="remove"
-                    icon={<RemoveCircleIcon />}
-                    label="Quitar de invitación"
-                    onClick={() =>
-                      handleRemoveFromInvite(id as string, row.fullName)
-                    }
-                    color="inherit"
-                  />,
-                );
-              }
-
-              if (onGuestDetail) {
-                actions.unshift(
-                  <GridActionsCellItem
-                    key="view"
-                    icon={<VisibilityIcon />}
-                    label="Ver Detalle"
-                    onClick={() => onGuestDetail(row)}
-                    color="inherit"
-                  />,
-                );
-              }
-
-              return actions;
-            },
-          },
-        ]}
+        columns={getColumns()}
       />
+
+      {/* Modal de detalle del invitado */}
+      <Dialog
+        open={guestDetailOpen}
+        onClose={handleCloseGuestDetail}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant="h6">
+              Detalle del Invitado: {selectedGuest?.fullName}
+            </Typography>
+            <IconButton onClick={handleCloseGuestDetail}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {selectedGuest && (
+            <GuestDetailForm
+              guest={selectedGuest}
+              invites={invites}
+              onSave={handleSaveGuestDetail}
+              onCancel={handleCloseGuestDetail}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Stack>
   );
 };

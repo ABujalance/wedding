@@ -35,13 +35,15 @@ export async function GET(request: NextRequest) {
       return acc;
     }, {} as Record<string, number>);
 
-    // Estadísticas de platos
-    const dishCounts = guests.reduce((acc, guest) => {
-      if (guest.dish) {
-        acc[guest.dish] = (acc[guest.dish] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
+    // Estadísticas de platos (solo invitados confirmados)
+    const dishCounts = guests
+      .filter((guest) => guest.confirmed === true)
+      .reduce((acc, guest) => {
+        if (guest.dish) {
+          acc[guest.dish] = (acc[guest.dish] || 0) + 1;
+        }
+        return acc;
+      }, {} as Record<string, number>);
 
     // Alergias agrupadas
     const allergies = guests

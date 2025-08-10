@@ -47,6 +47,7 @@ export const InvitesList: FC<InvitesListProps> = ({
   const [allGuests, setAllGuests] = useState<Guest[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [isCreating, setIsCreating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchInvites = async () => {
@@ -303,10 +304,6 @@ export const InvitesList: FC<InvitesListProps> = ({
     setSelectedGuest(null);
   }, []);
 
-  const handleViewGuestDetail = useCallback((guest: Guest) => {
-    setSelectedGuest(guest);
-  }, []);
-
   const handleBackToInviteGuests = useCallback(() => {
     setSelectedGuest(null);
   }, []);
@@ -425,6 +422,19 @@ export const InvitesList: FC<InvitesListProps> = ({
     },
   ];
 
+  // Filtrar invitaciones basado en el término de búsqueda
+  const filteredInvites = invites.filter(
+    (invite) =>
+      (invite.id &&
+        invite.id.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (invite.displayName &&
+        invite.displayName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (invite.email &&
+        invite.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (invite.phone &&
+        invite.phone.toLowerCase().includes(searchTerm.toLowerCase())),
+  );
+
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Box
@@ -446,8 +456,21 @@ export const InvitesList: FC<InvitesListProps> = ({
         </Button>
       </Box>
 
+      {/* Campo de búsqueda */}
+      <Box sx={{ mb: 2 }}>
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Buscar por número, nombre, email o teléfono..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ maxWidth: 500 }}
+          label="Filtrar invitaciones"
+        />
+      </Box>
+
       <DataGrid
-        rows={invites}
+        rows={filteredInvites}
         columns={columns}
         loading={loading}
         editMode="row"
@@ -571,7 +594,6 @@ export const InvitesList: FC<InvitesListProps> = ({
                   <GuestList
                     guests={inviteGuests}
                     adminTokenId={adminTokenId}
-                    onGuestDetail={handleViewGuestDetail}
                     selectedInviteId={selectedInvite?.id}
                     onGuestsUpdate={(updatedGuests) => {
                       setInviteGuests(updatedGuests);
