@@ -6,6 +6,7 @@ import { clearStoredInviteId } from '@/util/inviteStorage';
 
 export const LogoutButton: FC = () => {
   const handleLogout = () => {
+    if (typeof window === 'undefined') return;
     // Limpiar localStorage
     clearStoredInviteId();
     // Recargar la página

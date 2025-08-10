@@ -1,3 +1,5 @@
+'use client';
+
 import { ShiningText } from '@/components/Text/ShiningText';
 import { Invite } from '@/lib/firebase/invites';
 import { Stack, useMediaQuery } from '@mui/material';
@@ -5,9 +7,10 @@ import { FC, useEffect, useState } from 'react';
 import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
 import { HomeThemeWrapper } from '../HomeThemeWrapper';
+import { getStoredInviteId, setStoredInviteId } from '@/util/inviteStorage';
 
 export const InviteForm: FC = () => {
-  const existingInviteId = localStorage?.getItem('wedding-invite-id');
+  const existingInviteId = getStoredInviteId();
   const [invite, setInvite] = useState<Invite>();
   const [inviteId, setInviteId] = useState(existingInviteId || '');
   const [loading, setLoading] = useState(false);
@@ -27,7 +30,7 @@ export const InviteForm: FC = () => {
       }
       setError('');
       setInvite(invite);
-      localStorage.setItem('wedding-invite-id', inviteId);
+      setStoredInviteId(inviteId);
     } catch {
       setError(
         'Ha habido un error con tu solicitud. Asegurate que tu número es correcto',
