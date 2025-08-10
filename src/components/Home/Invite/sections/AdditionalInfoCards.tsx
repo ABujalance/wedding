@@ -21,24 +21,24 @@ const faqData: FAQCardData[] = [
   {
     title: 'Parking',
     content:
-      'Habrá aparcamiento de sobra disponible en la Hacienda. No te preocupes por encontrar sitio, tenemos espacio para todos nuestros invitados.',
+      'Habrá aparcamiento disponible en la Hacienda. No te preocupes por encontrar sitio, tenemos espacio para todos nuestros invitados.',
     image: ParkingImage,
     imageAlt: 'Parking',
   },
   {
     title: 'Álbum compartido',
     content:
-      'Queremos guardar todos los momentos especiales del día y es por ello que durante la celebración estará disponible una web para que toméis y subáis vídeos y fotos. Podéis descargar la app ahora para tener acceso a notificaciones especiales, pero no será necesario',
+      'Queremos guardar todos los momentos especiales de ese día y es por ello que durante la celebración estará disponible una web para que toméis y subáis vídeos y fotos. Podéis descargar ya la app para tener acceso a notificaciones especiales, pero no será necesario',
     image: PhotosImage,
     imageAlt: 'Album de fotos',
   },
   {
     title: 'Regalos',
-    content: `La navidad es una época para regalar y sabemos que muchos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos, para nosotros esta boda es un momento de celebración.<br><br>Si aún sabiendo esto queréis hacernos un regalo:
+    content: `Sabemos que algunos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos. Esta boda es un momento de celebración y no querríamos que faltase nadie.<br><br>Si aún sabiendo esto queréis hacernos un regalo:
     <div class="spoiler">
       <div class="spoiler-content">
         <strong>Cuenta bancaria:</strong><br>
-        ES12 3456 7890 1234 5678 9012<br>
+       ES29 2100 7282 3602 0048 6756<br>
       </div>
     </div>`,
     image: GiftImage,
@@ -46,7 +46,7 @@ const faqData: FAQCardData[] = [
   },
   {
     title: 'Contacto',
-    content: `Si hay algo que queráis decirnos, podéis usar los comentarios del formulario para hacerlo, es la forma más rápida para nosotros.<br><br>Sin embargo, para cualquier cosa que podáis necesitar o si preferís no usar el formulario, podéis contactarnos en los siguientes números:<br><br><strong>Verónica:</strong> 661 150 019<br><strong>Alberto:</strong> 689 355 643`,
+    content: `Si hay algo que queráis decirnos, podéis usar los comentarios del formulario para hacerlo, es la forma más rápida para nosotros.<br><br>Sin embargo, para cualquier cosa que podáis necesitar o si preferís no usar el formulario, podéis contactarnos por WhatsApp:<br><br><strong>Verónica:</strong> <a href="https://wa.me/34661150019">661 150 019</a><br><strong>Alberto:</strong> <a href="https://wa.me/34689355643">689 355 643</a>`,
     image: ContactImage,
     imageAlt: 'Contacto',
   },
@@ -160,6 +160,7 @@ export const AdditionalInfoCards: FC = () => {
             sx={{ width: '100%' }}
             alignItems="stretch"
             justifyContent="center"
+            flexWrap={'wrap'}
           >
             {faqData.map((item, index) => (
               <FAQCard key={index} data={item} />

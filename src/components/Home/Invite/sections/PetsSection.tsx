@@ -11,21 +11,26 @@ import { FC } from 'react';
 
 const pets = [
   {
-    name: 'Fu (Monsieur Fu)',
+    name: (
+      <>
+        <Typography>Fu</Typography>
+        <Typography variant="body2"> (Monsieur Fu)</Typography>
+      </>
+    ),
     photo: fuPhoto.src,
     drawing: fuDrawing.src,
     behavior: 'Bueno',
     gender: 'M',
     info: 'quiero que mi papi me siga dando palmaditas en el lomo y caricias en la barriga. Este año quiero que Bilbo deje de molestarme y que me deje dormir tranquilo. También quiero muchos premios y juguetes para perseguir yo solito.',
-    imagePosition: '50% 40%', // Posición personalizada con porcentajes
-    imageScale: 2.3, // Zoom: 1.0 = normal, 1.5 = 150%, 0.8 = 80%
+    imagePosition: '50% 0%', // Posición personalizada con porcentajes
+    imageScale: 1, // Zoom: 1.0 = normal, 1.5 = 150%, 0.8 = 80%
   },
   {
     name: 'Bilbo',
     photo: bilboPhoto.src,
     drawing: bilboDrawing.src,
     gender: 'M',
-    info: 'Este año me he portado muy bien, por eso quiero pedir que os lleveis a Nami para que no me moleste tanto. También quiero más cables para moderlos',
+    info: 'Este año me he portado muy muy muy bien, por eso quiero pedir que os lleveis a Nami para que no me moleste tanto. También quiero más cables para moderlos y un árbol de navidad más grande para poder trepar por él.',
     imagePosition: '45% 40%', // Enfoca en la cara
     imageScale: 1.75, // Zoom para enfocar más en la cara
   },
@@ -35,7 +40,7 @@ const pets = [
     drawing: namiDrawing.src,
     behavior: 'Buena',
     gender: 'H',
-    info: 'Este año he sido muy muy buena y por eso quiero que me traigais muchos juguetes nuevos, y más gatitos para jugar, y otro perrito, y más perritos. Y también premios y que me lleven a casa de la abuela a jugar con Lucky y que me lleven al campo a jugar con los otros perros y a correr y al parque a ver más perros y a la calle a ver más perros y a jugar con todos los perritos del mundo.',
+    info: 'Como soy una perrita tan buena quiero que me traigais muchos juguetes nuevos, más hermanitos para jugar y muchos premios. También quiero ir a casa de la abuela más veces a jugar con Lucky y a la playa para beber del mar y cavar en la arena. Ah, ¡y que el tito Migue venga más a casa para jugar con él!',
     imagePosition: '45% 40%', // Posición personalizada con porcentajes
     imageScale: 2.2, // Zoom personalizado
   },
@@ -59,7 +64,7 @@ export const PetsSection: FC = () => {
       >
         {pets.map((pet, idx) => (
           <Card
-            key={pet.name}
+            key={idx}
             sx={{
               width: { xs: '100%', md: '500px' },
               maxWidth: '100%',
@@ -85,7 +90,7 @@ export const PetsSection: FC = () => {
                   sx={{
                     width: 160,
                     height: 160,
-                    borderRadius: 1,
+                    borderRadius: '16px',
                     overflow: 'hidden',
                     border: '2px solid #b8860b',
                     flexShrink: 0,
@@ -117,7 +122,7 @@ export const PetsSection: FC = () => {
                   >
                     {pet.name}
                   </Typography>
-                  <Typography variant="body2" sx={{ mb: 0.3 }}>
+                  <Typography variant="body2" sx={{ mb: 0.3 }} fontWeight={800}>
                     {pet.name === 'Bilbo' ? (
                       <Box component="span" sx={{ position: 'relative' }}>
                         <Box
@@ -155,6 +160,7 @@ export const PetsSection: FC = () => {
               {/* Información adicional */}
               <Box sx={{ mb: 2 }}>
                 <Typography
+                  variant="h6"
                   sx={{ mb: 1 }}
                   fontFamily='"Caveat", cursive'
                   color="#000000"

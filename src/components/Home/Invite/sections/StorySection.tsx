@@ -21,12 +21,11 @@ export const StorySection: FC = () => {
           textAlign: 'center',
         }}
       >
-        ¡Hola! Estamos muy emocionados de poder compartir este gran día con
-        todos vosotros. Para nosotros es muy importante poder estar con toda la
-        gente a la que queremos en un solo lugar y esperamos que para vosotros
-        también sea un día especial. A ambos nos encanta la navidad y queremos
-        que este día sea una gran comida familiar de navidad para todos, ¡con
-        fiesta incluida!
+        ¡Hola! Cada vez queda menos para el gran día. Estamos muy felices de
+        poder compartir el inicio de esta nueva etapa con nuestras personas más
+        queridas. Para nosotros la navidad es una época muy especial y queremos
+        que esta sea inolvidable para todos. <br />
+        <strong>¡Os esperamos!</strong>
       </Typography>
 
       {/* Tarjetas del novio y la novia */}
@@ -42,17 +41,21 @@ export const StorySection: FC = () => {
         <PersonCard
           photo={novioPhoto}
           title="El Novio"
-          message="¡Hola! Soy Alberto, y después de tantos años juntos, por fin me caso con la mujer de mi vida. Estoy emocionadísimo de compartir este momento con todos vosotros. ¡Va a ser épico!"
-          borderColor="#8b4513"
+          message="¡Hola! Soy Alberto y estoy deseando poder veros a todos en la boda. Para mí el hecho del matrimonio no significa tanto como poder compartir mi amor por Verónica con todos vosotros. Espero que este día sea para vosotros al menos un pequeño porcentage de lo que lo es para mi un día cualquiera a su lado."
+          borderColor="#9FA58D"
           altText="El novio"
+          imagePosition="0% 60%"
+          imageScale={1.1}
         />
 
         <PersonCard
           photo={noviaPhoto}
           title="La Novia"
-          message="¡Hola a todos! Soy Verónica y soy una malisima persona que solo quiere ir a Disney y no quiere a Alberto. Niney?"
-          borderColor="#9c27b0"
+          message="¡Hola! Soy Verónica y después de tantos años soñando con este día, por fin está aquí. Con Alberto he encontrado mi hogar, mi risa constante y mi mejor amigo. Gracias por acompañarnos en el inicio de nuestra historia para siempre. Happy ever after!"
+          borderColor="#9C4B47"
           altText="La novia"
+          imagePosition="55% 50%"
+          imageScale={1.5}
         />
       </Box>
 

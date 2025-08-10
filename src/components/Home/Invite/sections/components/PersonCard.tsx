@@ -9,6 +9,8 @@ interface PersonCardProps {
   message: string;
   borderColor: string;
   altText: string;
+  imagePosition?: string; // Posición de la imagen (ej: "50% 40%", "center top")
+  imageScale?: number; // Zoom de la imagen (1.0 = normal, 1.5 = 150%, 0.8 = 80%)
 }
 
 export const PersonCard: FC<PersonCardProps> = ({
@@ -17,6 +19,8 @@ export const PersonCard: FC<PersonCardProps> = ({
   message,
   borderColor,
   altText,
+  imagePosition = 'center center', // Valor por defecto
+  imageScale = 1.0, // Valor por defecto (sin zoom)
 }) => {
   return (
     <Card
@@ -44,7 +48,9 @@ export const PersonCard: FC<PersonCardProps> = ({
           fill
           style={{
             objectFit: 'cover',
-            objectPosition: 'center center',
+            objectPosition: imagePosition,
+            transform: `scale(${imageScale})`,
+            transformOrigin: imagePosition,
           }}
         />
       </Box>
@@ -57,6 +63,7 @@ export const PersonCard: FC<PersonCardProps> = ({
             fontWeight: 800,
             textAlign: 'center',
             color: borderColor,
+            fontStyle: 'italic',
           }}
         >
           {title}

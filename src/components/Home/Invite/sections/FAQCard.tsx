@@ -146,6 +146,27 @@ export const FAQCard: FC<FAQCardProps> = ({ data }) => {
                 '& .spoiler.revealed .spoiler-content': {
                   display: 'block',
                 },
+                '& a': {
+                  color: '#2196f3',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  '&:hover': {
+                    textDecoration: 'underline',
+                    color: '#1976d2',
+                  },
+                  '&[href^="tel:"]': {
+                    color: '#4caf50',
+                    '&:hover': {
+                      color: '#388e3c',
+                    },
+                  },
+                  '&[href*="wa.me"]': {
+                    color: '#25d366',
+                    '&:hover': {
+                      color: '#128c7e',
+                    },
+                  },
+                },
               }}
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
