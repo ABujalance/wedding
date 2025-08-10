@@ -3,16 +3,15 @@
 import { ShiningText } from '@/components/Text/ShiningText';
 import { Invite } from '@/lib/firebase/invites';
 import { Stack, useMediaQuery } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
 import { HomeThemeWrapper } from '../HomeThemeWrapper';
 import { getStoredInviteId, setStoredInviteId } from '@/util/inviteStorage';
 
 export const InviteForm: FC = () => {
-  const existingInviteId = getStoredInviteId();
   const [invite, setInvite] = useState<Invite>();
-  const [inviteId, setInviteId] = useState(existingInviteId || '');
+  const [inviteId, setInviteId] = useState(getStoredInviteId() || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -43,12 +42,6 @@ export const InviteForm: FC = () => {
   const is1500Px = useMediaQuery('(min-width: 1500px)');
   const is900Px = useMediaQuery('(min-width: 900px)');
   const is600Px = useMediaQuery('(min-width: 600px)');
-
-  useEffect(() => {
-    if (existingInviteId) {
-      inviteAccess(existingInviteId);
-    }
-  }, [existingInviteId]);
 
   if (invite) {
     return (

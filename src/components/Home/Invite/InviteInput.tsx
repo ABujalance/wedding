@@ -117,13 +117,14 @@ export const InviteInput: FC<InviteInputProps> = ({
           borderRadius: is900Px ? '12px' : '10px',
           backgroundColor: 'white',
           color: '#654321',
-          border: '3px solid white',
-          textTransform: 'none',
-          letterSpacing: is900Px ? '1px' : '0.5px',
+          border: '3px solid #8B4513',
+          textTransform: 'uppercase',
+          letterSpacing: is900Px ? '2px' : '1.5px',
           boxShadow: '0 6px 16px rgba(0, 0, 0, 0.3)',
           transition: 'all 0.3s ease',
           '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            border: '3px solid #654321',
             transform: 'translateY(-3px)',
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.4)',
           },
@@ -134,7 +135,7 @@ export const InviteInput: FC<InviteInputProps> = ({
           '&.Mui-disabled': {
             backgroundColor: 'rgba(255, 255, 255, 0.4)', // Menos opaco que el activo
             color: 'rgba(101, 67, 33, 0.4)', // Más tenue que el activo
-            border: '3px solid rgba(255, 255, 255, 0.4)', // Borde más tenue
+            border: 'none', // Sin borde cuando está desactivado
             boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', // Sombra más sutil
             cursor: 'not-allowed', // Indicar que no se puede clickear
           },

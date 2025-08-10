@@ -13,67 +13,16 @@ export const LoadingCurtains: FC<LoadingCurtainsProps> = ({ children }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const checkImagesLoaded = () => {
-      // Get all images in the document
-      const images = document.querySelectorAll('img');
-      const imagePromises = Array.from(images).map((img) => {
-        if (img.complete) {
-          return Promise.resolve();
-        }
-        return new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
-        });
-      });
+    // Timeout simple para evitar problemas de estado
+    const timer = setTimeout(() => {
+      setIsAnimating(true);
+      // Esperar a que termine la animación
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1800);
+    }, 1000);
 
-      // Also check for CSS background images
-      const elementsWithBgImages = document.querySelectorAll(
-        '[style*="background"]',
-      );
-      const bgImagePromises = Array.from(elementsWithBgImages).map(
-        (element) => {
-          const style = window.getComputedStyle(element);
-          const bgImage = style.backgroundImage;
-
-          if (bgImage && bgImage !== 'none') {
-            const imageUrl = bgImage.slice(4, -1).replace(/"/g, '');
-            if (imageUrl.startsWith('http') || imageUrl.startsWith('/')) {
-              return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = resolve;
-                img.onerror = reject;
-                img.src = imageUrl;
-              });
-            }
-          }
-          return Promise.resolve();
-        },
-      );
-
-      return Promise.all([...imagePromises, ...bgImagePromises]);
-    };
-
-    // Wait a minimum time to ensure the curtains are visible
-    const minLoadTime = new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Wait for both minimum time and images to load
-    Promise.all([minLoadTime, checkImagesLoaded()])
-      .then(() => {
-        setIsAnimating(true);
-        // Wait for animation to complete before removing curtains
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000); // 2 seconds for opening animation
-      })
-      .catch(() => {
-        // If images fail to load, still proceed after minimum time
-        setTimeout(() => {
-          setIsAnimating(true);
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
-        }, 3000);
-      });
+    return () => clearTimeout(timer);
   }, []);
 
   if (!isLoading) {

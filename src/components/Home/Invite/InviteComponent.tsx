@@ -1,7 +1,7 @@
 import { Guest } from '@/lib/firebase/guest';
 import { Invite } from '@/lib/firebase/invites';
 import { Box, Stack } from '@mui/material';
-import { FC, use } from 'react';
+import { FC } from 'react';
 import { InviteHeader } from '@/components/Home/Invite/sections/InviteHeader';
 import { PhotoCarousel } from '@/components/Home/Invite/sections/PhotoCarousel';
 import { StorySection } from '@/components/Home/Invite/sections/StorySection';
@@ -27,15 +27,13 @@ import nosotros14 from '@/assets/images/nosotros/14.jpeg';
 
 type InviteComponentProps = {
   invite: Invite;
-  guestsPromise: Promise<Guest[]>;
+  guests: Guest[];
 };
 
 export const InviteComponent: FC<InviteComponentProps> = ({
   invite,
-  guestsPromise,
+  guests,
 }) => {
-  const guests = use(guestsPromise);
-
   return (
     <Stack gap={6}>
       <InviteHeader displayName={invite.displayName} />
