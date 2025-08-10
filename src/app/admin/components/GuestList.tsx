@@ -14,12 +14,14 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Autocomplete,
 } from '@mui/material';
 import {
   DataGrid,
   GridActionsCellItem,
   GridRowModes,
   GridRowModesModel,
+  GridRenderEditCellParams,
 } from '@mui/x-data-grid';
 import { FC, useCallback, useState, useEffect, useMemo } from 'react';
 
@@ -107,6 +109,65 @@ const deleteGuest = async (guestId: string, adminTokenId: string) => {
     console.error('Error eliminando invitado:', error);
     return false;
   }
+};
+
+// Componente de edición personalizado para la columna de invitación
+const InviteEditCell = ({
+  id,
+  value,
+  api,
+  field,
+  adminTokenId,
+}: GridRenderEditCellParams & { adminTokenId: string }) => {
+  const [invites, setInvites] = useState<Invite[]>([]);
+
+  // Cargar invitaciones
+  useEffect(() => {
+    const fetchInvites = async () => {
+      try {
+        const response = await fetch('/api/admin/invites', {
+          headers: {
+            'x-admin-token': adminTokenId,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setInvites(data);
+        }
+      } catch (error) {
+        console.error('Error fetching invites:', error);
+      }
+    };
+    fetchInvites();
+  }, [adminTokenId]);
+
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    newValue: Invite | null,
+  ) => {
+    api.setEditCellValue({ id, field, value: newValue?.id || '' });
+  };
+
+  const currentInvite = invites.find((inv) => inv.id === value) || null;
+
+  return (
+    <Autocomplete
+      fullWidth
+      size="small"
+      options={invites}
+      getOptionLabel={(invite) => `${invite.id} - ${invite.displayName}`}
+      value={currentInvite}
+      onChange={handleChange}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          placeholder="Buscar invitación..."
+          variant="outlined"
+        />
+      )}
+      isOptionEqualToValue={(option, value) => option.id === value?.id}
+    />
+  );
 };
 
 export const GuestList: FC<GuestListProps> = ({
@@ -418,11 +479,9 @@ export const GuestList: FC<GuestListProps> = ({
             flex: 1,
             headerName: 'Invitación',
             editable: true,
-            type: 'singleSelect',
-            valueOptions: invites.map((invite) => ({
-              value: invite.id,
-              label: `${invite.id} - ${invite.displayName}`,
-            })),
+            renderEditCell: (params) => (
+              <InviteEditCell {...params} adminTokenId={adminTokenId} />
+            ),
             valueFormatter: (value: string) => {
               const invite = invites.find((inv) => inv.id === value);
               return invite

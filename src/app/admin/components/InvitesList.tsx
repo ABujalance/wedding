@@ -11,10 +11,8 @@ import {
   DialogActions,
   IconButton,
   Stack,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  TextField,
+  Autocomplete,
 } from '@mui/material';
 import {
   DataGrid,
@@ -530,34 +528,43 @@ export const InvitesList: FC<InvitesListProps> = ({
                 <Stack spacing={2}>
                   {/* Selector para añadir invitados existentes */}
                   <Box>
-                    <FormControl fullWidth size="small">
-                      <InputLabel>Añadir invitado existente</InputLabel>
-                      <Select
-                        label="Añadir invitado existente"
-                        value=""
-                        onChange={(e) =>
-                          handleAssignExistingGuest(e.target.value)
+                    <Autocomplete
+                      fullWidth
+                      size="small"
+                      options={allGuests.filter(
+                        (guest) => guest.inviteId !== selectedInvite?.id,
+                      )}
+                      getOptionLabel={(guest) => guest.fullName || ''}
+                      renderOption={(props, guest) => (
+                        <Box component="li" {...props}>
+                          {guest.fullName}
+                          {guest.inviteId && guest.inviteId !== '' && (
+                            <Typography
+                              variant="caption"
+                              sx={{ ml: 1, opacity: 0.7 }}
+                            >
+                              (actualmente en: {guest.inviteId})
+                            </Typography>
+                          )}
+                        </Box>
+                      )}
+                      onChange={(event, guest) => {
+                        if (guest) {
+                          handleAssignExistingGuest(guest.id);
                         }
-                      >
-                        {allGuests
-                          .filter(
-                            (guest) => guest.inviteId !== selectedInvite?.id,
-                          )
-                          .map((guest) => (
-                            <MenuItem key={guest.id} value={guest.id}>
-                              {guest.fullName}
-                              {guest.inviteId && guest.inviteId !== '' && (
-                                <Typography
-                                  variant="caption"
-                                  sx={{ ml: 1, opacity: 0.7 }}
-                                >
-                                  (actualmente en: {guest.inviteId})
-                                </Typography>
-                              )}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Buscar y añadir invitado existente"
+                          placeholder="Escribe el nombre del invitado..."
+                        />
+                      )}
+                      value={null}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value?.id
+                      }
+                    />
                   </Box>
 
                   {/* Lista de invitados de esta invitación */}
