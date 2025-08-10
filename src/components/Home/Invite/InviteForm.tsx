@@ -8,8 +8,10 @@ import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
 import { HomeThemeWrapper } from '../HomeThemeWrapper';
 import { getStoredInviteId, setStoredInviteId } from '@/util/inviteStorage';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export const InviteForm: FC = () => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [invite, setInvite] = useState<Invite>();
   const [inviteId, setInviteId] = useState(getStoredInviteId() || '');
   const [loading, setLoading] = useState(false);
@@ -18,7 +20,23 @@ export const InviteForm: FC = () => {
   const inviteAccess = async (inviteId: string) => {
     setLoading(true);
     try {
-      const inviteReq = await fetch(`api/invites/${inviteId}`);
+      // Ejecutar reCAPTCHA antes de hacer la petición
+      if (!executeRecaptcha) {
+        setError('Error de seguridad. Por favor, recarga la página.');
+        setLoading(false);
+        return;
+      }
+
+      const token = await executeRecaptcha('invite_access');
+
+      const inviteReq = await fetch(`api/invites/${inviteId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'recaptcha-token': token,
+        },
+      });
+
       if (!inviteReq.ok) {
         throw new Error('Error al acceder a la invitación');
       }

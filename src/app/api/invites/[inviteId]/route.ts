@@ -1,4 +1,5 @@
 import { getInvite, updateInvite } from '@/lib/firebase/invites';
+import { verifyRecaptcha, isValidRecaptcha } from '@/lib/recaptcha';
 import { NextRequest } from 'next/server';
 
 export async function GET(
@@ -6,6 +7,28 @@ export async function GET(
   { params }: { params: Promise<{ inviteId: string }> },
 ) {
   try {
+    // Verificar reCAPTCHA
+    const recaptchaToken = request.headers.get('recaptcha-token');
+
+    if (!recaptchaToken) {
+      return new Response(
+        JSON.stringify({ error: 'reCAPTCHA token required' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+
+    const recaptchaResponse = await verifyRecaptcha(recaptchaToken);
+
+    if (!isValidRecaptcha(recaptchaResponse)) {
+      return new Response(JSON.stringify({ error: 'Invalid reCAPTCHA' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const inviteId = (await params).inviteId;
     const invite = await getInvite(inviteId);
 

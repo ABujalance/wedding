@@ -49,7 +49,7 @@ export const PetsSection: FC = () => {
         fontWeight={800}
         sx={{ textDecoration: 'underline' }}
       >
-        Los damitos
+        Nuestros pequeños
       </Typography>
       <Stack
         gap={3}
