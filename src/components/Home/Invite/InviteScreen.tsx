@@ -3,6 +3,7 @@ import { FC, Suspense } from 'react';
 import { InviteComponent } from './InviteComponent';
 import { InviteSkeleton } from './InviteSkeleton';
 import { Guest } from '@/lib/firebase/guest';
+import { LogoutButton } from './components/LogoutButton';
 
 type InviteScreenProps = {
   invite: Invite;
@@ -17,8 +18,11 @@ const fetchGuestData = async (inviteId: string) => {
 export const InviteScreen: FC<InviteScreenProps> = ({ invite }) => {
   const guestsPromise = fetchGuestData(invite.id);
   return (
-    <Suspense fallback={<InviteSkeleton />}>
-      <InviteComponent invite={invite} guestsPromise={guestsPromise} />
-    </Suspense>
+    <>
+      <LogoutButton />
+      <Suspense fallback={<InviteSkeleton />}>
+        <InviteComponent invite={invite} guestsPromise={guestsPromise} />
+      </Suspense>
+    </>
   );
 };

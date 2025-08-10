@@ -1,20 +1,51 @@
 import { ShiningText } from '@/components/Text/ShiningText';
 import { Invite } from '@/lib/firebase/invites';
 import { Stack, useMediaQuery } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { InviteInput } from './InviteInput';
 import { InviteScreen } from './InviteScreen';
 import { HomeThemeWrapper } from '../HomeThemeWrapper';
 
 export const InviteForm: FC = () => {
+  const existingInviteId = localStorage?.getItem('wedding-invite-id');
   const [invite, setInvite] = useState<Invite>();
-  const [inviteId, setInviteId] = useState('');
+  const [inviteId, setInviteId] = useState(existingInviteId || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const inviteAccess = async (inviteId: string) => {
+    setLoading(true);
+    try {
+      const inviteReq = await fetch(`api/invites/${inviteId}`);
+      if (!inviteReq.ok) {
+        throw new Error('Error al acceder a la invitación');
+      }
+      const invite = (await inviteReq.json()) as Invite | null;
+      if (!invite) {
+        setError('El número introducido no existe, inténtalo de nuevo');
+        return;
+      }
+      setError('');
+      setInvite(invite);
+      localStorage.setItem('wedding-invite-id', inviteId);
+    } catch {
+      setError(
+        'Ha habido un error con tu solicitud. Asegurate que tu número es correcto',
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const is1500Px = useMediaQuery('(min-width: 1500px)');
   const is900Px = useMediaQuery('(min-width: 900px)');
   const is600Px = useMediaQuery('(min-width: 600px)');
+
+  useEffect(() => {
+    if (existingInviteId) {
+      inviteAccess(existingInviteId);
+    }
+  }, [existingInviteId]);
 
   if (invite) {
     return (
@@ -25,23 +56,8 @@ export const InviteForm: FC = () => {
   }
 
   const onInviteAccess = async () => {
-    setLoading(true);
-    try {
-      const inviteReq = await fetch(`api/invites/${inviteId}`);
-      const invite = (await inviteReq.json()) as Invite | null;
-      if (!invite) {
-        setError('El número introducido no existe, inténtalo de nuevo');
-        return;
-      }
-      setError('');
-      setInvite(invite);
-    } catch {
-      setError(
-        'Ha habido un error con tu solicitud. Asegurate que tu número es correcto',
-      );
-    } finally {
-      setLoading(false);
-    }
+    if (!inviteId) return;
+    await inviteAccess(inviteId);
   };
 
   return (
