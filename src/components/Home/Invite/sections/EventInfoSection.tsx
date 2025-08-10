@@ -29,12 +29,12 @@ export const EventInfoSection: FC = () => {
             background: `
               repeating-linear-gradient(
                 45deg,
-                #dc2626 0px,
-                #dc2626 12px,
-                #16a34a 12px,
-                #16a34a 24px,
-                #fefefe 24px,
-                #fefefe 36px
+                #9C4B47 0px,
+                #9C4B47 12px,
+                #9FA58D 12px,
+                #9FA58D 24px,
+                #F8FBF5 24px,
+                #F8FBF5 36px
               )
             `,
             borderRadius: 'inherit',
