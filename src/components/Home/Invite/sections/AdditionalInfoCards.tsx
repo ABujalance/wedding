@@ -1,7 +1,5 @@
 'use client';
 import {
-  Card,
-  CardContent,
   Stack,
   Typography,
   Accordion,
@@ -11,16 +9,41 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FC, useState } from 'react';
+import { FAQCard, FAQCardData } from './FAQCard';
 
-const items = [
-  { title: 'Parking', text: 'Habrá aparcamiento de sobra disponible.' },
+// Importar imágenes para las FAQs
+import ParkingImage from '@/assets/images/FAQ/parking.webp';
+import GiftImage from '@/assets/images/FAQ/gift.png';
+import PhotosImage from '@/assets/images/FAQ/photos.png';
+import ContactImage from '@/assets/images/FAQ/whatsapp.webp';
+// Datos de las tarjetas FAQ - Fácil de modificar y añadir más
+const faqData: FAQCardData[] = [
+  {
+    title: 'Parking',
+    content:
+      'Habrá aparcamiento de sobra disponible en la Hacienda. No te preocupes por encontrar sitio, tenemos espacio para todos nuestros invitados.',
+    image: ParkingImage,
+    imageAlt: 'Parking',
+  },
   {
     title: 'Álbum compartido',
-    text: 'Pronto dejaremos aquí el enlace a la app para subir fotos.',
+    content:
+      'Queremos guardar todos los momentos especiales del día y es por ello que durante la celebración estará disponible una web para que toméis y subáis vídeos y fotos. Podéis descargar la app ahora para tener acceso a notificaciones especiales, pero no será necesario',
+    image: PhotosImage,
+    imageAlt: 'Album de fotos',
   },
   {
     title: 'Regalos',
-    text: 'Dejaremos aquí la cuenta bancaria con un mensajito bonito.',
+    content: `La navidad es una época para regalar y sabemos que muchos de vosotros queréis
+     contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos`,
+    image: GiftImage,
+    imageAlt: 'Regalos',
+  },
+  {
+    title: 'Contacto',
+    content: `Si hay algo que queráis decirnos, podéis usar los comentarios del formulario para hacerlo, es la forma más rápida para nosotros. Sin embargo, para cualquier cosa que podáis necesitar o si preferis no usar el formulario, podéis contactarnos en los situientes núnmeros: Verónica - 661150019 ; Alberto - 689355643`,
+    image: ContactImage,
+    imageAlt: 'Contacto',
   },
 ];
 
@@ -101,7 +124,7 @@ export const AdditionalInfoCards: FC = () => {
                 mb: 0.5,
               }}
             >
-              Preguntas comunes
+              Preguntas frecuentes
             </Typography>
             {!hasBeenExpanded && (
               <Typography
@@ -125,7 +148,7 @@ export const AdditionalInfoCards: FC = () => {
             pt: 2,
           }}
         >
-          {/* Contenido expandido con las tarjetas originales */}
+          {/* Contenido expandido con las nuevas tarjetas FAQ */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             gap={3}
@@ -133,39 +156,8 @@ export const AdditionalInfoCards: FC = () => {
             alignItems="stretch"
             justifyContent="center"
           >
-            {items.map((item) => (
-              <Card
-                key={item.title}
-                sx={{
-                  width: { xs: '100%', sm: '100%', md: 'auto' },
-                  flex: { md: 1 },
-                  minWidth: { md: 260 },
-                  alignSelf: 'stretch',
-                  maxWidth: '100%',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  borderRadius: 2,
-                  '&:hover': {
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-                    transform: 'translateY(-2px)',
-                  },
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      mb: 1,
-                    }}
-                  >
-                    {item.title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#666' }}>
-                    {item.text}
-                  </Typography>
-                </CardContent>
-              </Card>
+            {faqData.map((item, index) => (
+              <FAQCard key={index} data={item} />
             ))}
           </Stack>
         </AccordionDetails>

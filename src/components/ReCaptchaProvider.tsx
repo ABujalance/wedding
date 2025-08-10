@@ -24,7 +24,18 @@ export const ReCaptchaProvider: FC<ReCaptchaProviderProps> = ({ children }) => {
         appendTo: 'head',
         nonce: undefined,
       }}
+      container={{
+        parameters: {
+          badge: 'inline',
+          theme: 'light',
+        },
+      }}
     >
+      <style jsx global>{`
+        .grecaptcha-badge {
+          visibility: hidden !important;
+        }
+      `}</style>
       {children}
     </GoogleReCaptchaProvider>
   );

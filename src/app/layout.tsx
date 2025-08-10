@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ReCaptchaProvider } from '@/components/ReCaptchaProvider';
+import { ReCaptchaDisclaimer } from '@/components/ReCaptchaDisclaimer';
 
 export const metadata: Metadata = {
   title: 'Alberto y Verónica',
@@ -21,8 +22,13 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body>
-        <ReCaptchaProvider>{children}</ReCaptchaProvider>
+      <body style={{ margin: 0, padding: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <ReCaptchaProvider>
+          <div style={{ flex: 1 }}>
+            {children}
+          </div>
+          <ReCaptchaDisclaimer />
+        </ReCaptchaProvider>
       </body>
     </html>
   );
