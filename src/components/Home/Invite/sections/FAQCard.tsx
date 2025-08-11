@@ -1,6 +1,6 @@
 'use client';
-import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
-import { FC, useEffect, useRef } from 'react';
+import { Card, CardContent, Typography, Box, Stack, Button } from '@mui/material';
+import { FC, useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 
 export interface FAQCardData {
@@ -14,31 +14,100 @@ interface FAQCardProps {
   data: FAQCardData;
 }
 
+// Componente simple para el spoiler
+const SpoilerButton: FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  return (
+    <Box sx={{ my: 2 }}>
+      {!isRevealed ? (
+        <Button
+          variant="outlined"
+          onClick={() => setIsRevealed(true)}
+          sx={{
+            borderStyle: 'dashed',
+            borderWidth: 2,
+            padding: 2,
+            width: '100%',
+            color: '#666',
+            borderColor: '#ccc',
+            '&:hover': {
+              borderColor: '#999',
+              backgroundColor: '#f5f5f5',
+            },
+          }}
+        >
+          🔒 Haz clic para revelar información
+        </Button>
+      ) : (
+        <Box
+          sx={{
+            backgroundColor: '#e8f5e8',
+            border: '2px solid #4caf50',
+            borderRadius: 1,
+            padding: 2,
+          }}
+        >
+          <Typography variant="caption" sx={{ color: '#2e7d32', fontWeight: 'bold', display: 'block', mb: 1 }}>
+            🔓 Información revelada
+          </Typography>
+          <Box sx={{ fontFamily: 'monospace', fontSize: '0.9em' }}>
+            {children}
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
 export const FAQCard: FC<FAQCardProps> = ({ data }) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleSpoilerClick = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target.classList.contains('spoiler')) {
-        target.classList.toggle('revealed');
-      }
-    };
-
-    const contentElement = contentRef.current;
-    if (contentElement) {
-      const spoilers = contentElement.querySelectorAll('.spoiler');
-      spoilers.forEach((spoiler) => {
-        spoiler.addEventListener('click', handleSpoilerClick);
-      });
-
-      return () => {
-        spoilers.forEach((spoiler) => {
-          spoiler.removeEventListener('click', handleSpoilerClick);
-        });
-      };
+  // Función para renderizar contenido con spoiler
+  const renderContent = () => {
+    if (data.title === 'Regalos') {
+      return (
+        <Box>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Sabemos que algunos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos. Esta boda es un momento de celebración y no querríamos que faltase nadie.
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Si aún sabiendo esto queréis hacernos un regalo:
+          </Typography>
+          <SpoilerButton>
+            <strong>Cuenta bancaria:</strong><br/>
+            ES29 2100 7282 3602 0048 6756
+          </SpoilerButton>
+        </Box>
+      );
     }
-  }, [data.content]);
+
+    // Para otros contenidos, renderizar normalmente con HTML
+    return (
+      <Typography
+        variant="body2"
+        sx={{
+          lineHeight: 1.6,
+          fontWeight: 400,
+          color: '#555',
+          '& a': {
+            color: '#2196f3',
+            textDecoration: 'none',
+            fontWeight: 600,
+            '&:hover': {
+              textDecoration: 'underline',
+              color: '#1976d2',
+            },
+            '&[href*="wa.me"]': {
+              color: '#25d366',
+              '&:hover': {
+                color: '#128c7e',
+              },
+            },
+          },
+        }}
+        dangerouslySetInnerHTML={{ __html: data.content }}
+      />
+    );
+  };
 
   return (
     <Card
@@ -101,75 +170,10 @@ export const FAQCard: FC<FAQCardProps> = ({ data }) => {
 
               {/* Contenido a la derecha - 70% del ancho */}
             </Stack>
-            <Typography
-              ref={contentRef}
-              variant="body2"
-              sx={{
-                color: '#666',
-                lineHeight: 1.5,
-                '& strong': {
-                  fontWeight: 600,
-                  color: '#333',
-                },
-                '& .spoiler': {
-                  backgroundColor: '#f5f5f5',
-                  border: '1px dashed #ccc',
-                  borderRadius: 1,
-                  padding: 1,
-                  marginTop: 1,
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s',
-                  position: 'relative',
-                  '&:hover': {
-                    backgroundColor: '#eeeeee',
-                  },
-                  '&::before': {
-                    content: '"🔒 pulsa para revelar"',
-                    fontSize: '0.75em',
-                    color: '#888',
-                    fontStyle: 'italic',
-                  },
-                  '&.revealed::before': {
-                    content: '"🔓 Información revelada"',
-                  },
-                },
-                '& .spoiler-content': {
-                  display: 'none',
-                  marginTop: 1,
-                  padding: 1,
-                  backgroundColor: '#fff',
-                  border: '1px solid #ddd',
-                  borderRadius: 1,
-                  fontFamily: 'monospace',
-                  fontSize: '0.9em',
-                },
-                '& .spoiler.revealed .spoiler-content': {
-                  display: 'block',
-                },
-                '& a': {
-                  color: '#2196f3',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  '&:hover': {
-                    textDecoration: 'underline',
-                    color: '#1976d2',
-                  },
-                  '&[href^="tel:"]': {
-                    color: '#4caf50',
-                    '&:hover': {
-                      color: '#388e3c',
-                    },
-                  },
-                  '&[href*="wa.me"]': {
-                    color: '#25d366',
-                    '&:hover': {
-                      color: '#128c7e',
-                    },
-                  },
-                },
-              }}
-              dangerouslySetInnerHTML={{ __html: data.content }}
-            />
+            
+            {/* Renderizar contenido usando la función */}
+            {renderContent()}
+            
           </Box>
         </Stack>
       </CardContent>
