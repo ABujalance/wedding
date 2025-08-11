@@ -1,7 +1,17 @@
 'use client';
-import { Card, CardContent, Typography, Box, Stack, Button } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Stack,
+  Button,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 import { FC, useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export interface FAQCardData {
   title: string;
@@ -17,46 +27,105 @@ interface FAQCardProps {
 // Componente simple para el spoiler
 const SpoilerButton: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const accountNumber = 'ES29 2100 7282 3602 0048 6756';
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(accountNumber);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 3000);
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
+  };
 
   return (
-    <Box sx={{ my: 2 }}>
-      {!isRevealed ? (
-        <Button
-          variant="outlined"
-          onClick={() => setIsRevealed(true)}
-          sx={{
-            borderStyle: 'dashed',
-            borderWidth: 2,
-            padding: 2,
-            width: '100%',
-            color: '#666',
-            borderColor: '#ccc',
-            '&:hover': {
-              borderColor: '#999',
-              backgroundColor: '#f5f5f5',
-            },
-          }}
-        >
-          🔒 Haz clic para revelar información
-        </Button>
-      ) : (
-        <Box
-          sx={{
-            backgroundColor: '#e8f5e8',
-            border: '2px solid #4caf50',
-            borderRadius: 1,
-            padding: 2,
-          }}
-        >
-          <Typography variant="caption" sx={{ color: '#2e7d32', fontWeight: 'bold', display: 'block', mb: 1 }}>
-            🔓 Información revelada
-          </Typography>
-          <Box sx={{ fontFamily: 'monospace', fontSize: '0.9em' }}>
-            {children}
+    <>
+      <Box sx={{ my: 2 }}>
+        {!isRevealed ? (
+          <Button
+            variant="outlined"
+            onClick={() => setIsRevealed(true)}
+            sx={{
+              borderStyle: 'dashed',
+              borderWidth: 2,
+              padding: 2,
+              width: '100%',
+              color: '#666',
+              borderColor: '#ccc',
+              '&:hover': {
+                borderColor: '#999',
+                backgroundColor: '#f5f5f5',
+              },
+            }}
+          >
+            🔒 Haz clic para revelar información
+          </Button>
+        ) : (
+          <Box
+            sx={{
+              backgroundColor: '#e8f5e8',
+              border: '2px solid #4caf50',
+              borderRadius: 1,
+              padding: 2,
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: '#2e7d32',
+                fontWeight: 'bold',
+                display: 'block',
+                mb: 1,
+              }}
+            >
+              🔓 Información revelada
+            </Typography>
+            <Box sx={{ fontFamily: 'monospace', fontSize: '0.9em', mb: 2 }}>
+              {children}
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<ContentCopyIcon />}
+                onClick={handleCopy}
+                sx={{
+                  backgroundColor: '#4caf50',
+                  '&:hover': {
+                    backgroundColor: '#45a049',
+                  },
+                }}
+              >
+                Copiar cuenta
+              </Button>
+              {copySuccess && (
+                <Typography
+                  variant="caption"
+                  sx={{ color: '#2e7d32', fontWeight: 'bold' }}
+                >
+                  ✓ ¡Copiado!
+                </Typography>
+              )}
+            </Box>
           </Box>
-        </Box>
-      )}
-    </Box>
+        )}
+      </Box>
+
+      {/* Snackbar para mostrar mensaje de éxito */}
+      <Snackbar
+        open={copySuccess}
+        autoHideDuration={3000}
+        onClose={() => setCopySuccess(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" onClose={() => setCopySuccess(false)}>
+          ¡Número de cuenta copiado al portapapeles!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -67,13 +136,17 @@ export const FAQCard: FC<FAQCardProps> = ({ data }) => {
       return (
         <Box>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Sabemos que algunos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos. Esta boda es un momento de celebración y no querríamos que faltase nadie.
+            Sabemos que algunos de vosotros queréis contribuir con un detalle.
+            Sin embargo, lo más importante para nosotros es que todos estéis
+            allí y pasemos un buen rato juntos. Esta boda es un momento de
+            celebración y no querríamos que faltase nadie.
           </Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Si aún sabiendo esto queréis hacernos un regalo:
           </Typography>
           <SpoilerButton>
-            <strong>Cuenta bancaria:</strong><br/>
+            <strong>Cuenta bancaria:</strong>
+            <br />
             ES29 2100 7282 3602 0048 6756
           </SpoilerButton>
         </Box>
@@ -170,10 +243,9 @@ export const FAQCard: FC<FAQCardProps> = ({ data }) => {
 
               {/* Contenido a la derecha - 70% del ancho */}
             </Stack>
-            
+
             {/* Renderizar contenido usando la función */}
             {renderContent()}
-            
           </Box>
         </Stack>
       </CardContent>
