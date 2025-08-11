@@ -37,7 +37,7 @@ const faqData: FAQCardData[] = [
     content: `Sabemos que algunos de vosotros queréis contribuir con un detalle. Sin embargo, lo más importante para nosotros es que todos estéis allí y pasemos un buen rato juntos. Esta boda es un momento de celebración y no querríamos que faltase nadie.<br><br>Si aún sabiendo esto queréis hacernos un regalo:
     <div class="spoiler">
       <div class="spoiler-content">
-        <strong>Cuenta bancaria:</strong><br>
+        <strong>Cuenta bancaria:</strong><br/>
        ES29 2100 7282 3602 0048 6756<br>
       </div>
     </div>`,
