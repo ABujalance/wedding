@@ -55,6 +55,9 @@ export async function GET(request: NextRequest) {
 
     // Últimos 10 invitados actualizados
     const recentlyUpdated = guests
+      .filter(
+        (g) => g.lastUpdate instanceof Date && !isNaN(g.lastUpdate.getTime()),
+      )
       .sort((a, b) => b.lastUpdate.getTime() - a.lastUpdate.getTime())
       .slice(0, 10)
       .map((g) => ({
