@@ -41,7 +41,7 @@ export const StorySection: FC = () => {
         <PersonCard
           photo={novioPhoto}
           title="El Novio"
-          message="¡Hola! Soy Alberto y estoy deseando poder veros a todos en la boda. Para mí el hecho del matrimonio no significa tanto como poder compartir mi amor por Verónica con todos vosotros. Espero que este día sea para vosotros al menos un pequeño porcentage de lo que lo es para mi un día cualquiera a su lado."
+          message="¡Hola! Soy Alberto y estoy deseando poder veros a todos en la boda. Para mí el hecho del matrimonio no significa tanto como poder compartir mi amor por Verónica con todos vosotros. Espero que este día sea para vosotros al menos un pequeño porcentaje de lo que lo es para mi un día cualquiera a su lado."
           borderColor="#9FA58D"
           altText="El novio"
           imagePosition="0% 60%"
