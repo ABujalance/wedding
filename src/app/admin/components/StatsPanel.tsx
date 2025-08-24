@@ -3,13 +3,11 @@ import {
   Box,
   Card,
   CardContent,
-  Typography,
   Grid,
   List,
   ListItem,
   ListItemText,
-  Chip,
-  Stack,
+  Typography,
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
@@ -20,6 +18,8 @@ interface Stats {
   busCounts: Record<string, number>;
   dishCounts: Record<string, number>;
   allergies: Array<{ name: string; allergies: string }>;
+  songsReported: Array<{ name: string; song: string }>;
+  songCounts: Record<string, number>;
   recentlyUpdated: Array<{
     id: string;
     name: string;
@@ -166,32 +166,35 @@ export const StatsPanel: FC<StatsPanelProps> = ({ adminTokenId }) => {
           </Card>
         </Grid>
 
-        {/* Últimas actualizaciones */}
+        {/* Canciones reportadas */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Últimas Actualizaciones
+                Canciones Sugeridas ({stats.songsReported.length})
               </Typography>
               <List dense>
-                {stats.recentlyUpdated.map((guest) => (
-                  <ListItem key={guest.id}>
-                    <ListItemText
-                      primary={
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          <Typography variant="body2">{guest.name}</Typography>
-                          <Chip
-                            size="small"
-                            label={guest.confirmed ? 'Confirmado' : 'Pendiente'}
-                            color={guest.confirmed ? 'success' : 'default'}
-                          />
-                        </Stack>
-                      }
-                      secondary={new Date(guest.lastUpdate).toLocaleString()}
-                    />
+                {stats.songsReported.map((item, index) => (
+                  <ListItem key={index}>
+                    <ListItemText primary={item.name} secondary={item.song} />
                   </ListItem>
                 ))}
               </List>
+              <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
+                <Typography variant="caption" color="text.secondary">
+                  Canciones sugeridas y número de veces:
+                </Typography>
+                <List dense>
+                  {Object.entries(stats.songCounts).map(([song, count]) => (
+                    <ListItem key={song}>
+                      <ListItemText
+                        primary={song}
+                        secondary={`Veces sugerida: ${count}`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
             </CardContent>
           </Card>
         </Grid>

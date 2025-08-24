@@ -241,13 +241,22 @@ const GuestDetailForm: FC<{
       />
 
       <FormControl fullWidth>
-        <InputLabel>Bus</InputLabel>
+        <InputLabel id="bus-label">Bus</InputLabel>
         <Select
-          value={editedGuest.busOrigin || ''}
-          onChange={(e) => handleInputChange('busOrigin', e.target.value)}
+          labelId="bus-label"
+          value={editedGuest.busOrigin ?? ''}
+          onChange={(e) =>
+            handleInputChange(
+              'busOrigin',
+              e.target.value === '' ? undefined : e.target.value,
+            )
+          }
           label="Bus"
+          displayEmpty
         >
-          <MenuItem value="">Sin bus</MenuItem>
+          <MenuItem value="">
+            <em>Sin bus</em>
+          </MenuItem>
           <MenuItem value="Sevilla">Sevilla</MenuItem>
           <MenuItem value="Huelva">Huelva</MenuItem>
           <MenuItem value="Lucena">Lucena</MenuItem>
@@ -644,7 +653,12 @@ export const GuestList: FC<GuestListProps> = ({
         headerName: 'Bus',
         editable: true,
         type: 'singleSelect',
-        valueOptions: ['Sevilla', 'Huelva', 'Lucena'],
+        valueOptions: [
+          { value: '', label: 'Sin bus' },
+          { value: 'Sevilla', label: 'Sevilla' },
+          { value: 'Huelva', label: 'Huelva' },
+          { value: 'Lucena', label: 'Lucena' },
+        ],
       },
     ];
 

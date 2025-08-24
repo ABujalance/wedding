@@ -54,7 +54,10 @@ export async function PATCH(
       confirmed?: boolean;
       allergies?: string;
       dish?: 'marisco' | 'carne';
+      song?: string;
     }> = Array.isArray(body?.guests) ? body.guests : [];
+
+    console.log('PATATA');
 
     if (!updates.length) {
       return new Response(JSON.stringify({ error: 'No updates provided' }), {
@@ -76,6 +79,7 @@ export async function PATCH(
       if (typeof u.confirmed === 'boolean') allowed.confirmed = u.confirmed;
       if (typeof u.allergies === 'string') allowed.allergies = u.allergies;
       if (u.dish === 'marisco' || u.dish === 'carne') allowed.dish = u.dish;
+      if (typeof u.song === 'string') allowed.song = u.song;
 
       if (Object.keys(allowed).length > 0) {
         await updateGuest(u.id, allowed);

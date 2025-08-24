@@ -53,6 +53,22 @@ export async function GET(request: NextRequest) {
         allergies: g.allergies,
       }));
 
+    // Canciones agrupadas
+    const songsReported = guests
+      .filter((g) => g.song && g.song.trim() !== '')
+      .map((g) => ({
+        name: g.fullName,
+        song: g.song,
+      }));
+
+    // Canciones agrupadas por nombre
+    const songCounts: Record<string, number> = {};
+    songsReported.forEach(({ song }) => {
+      if (typeof song === 'string' && song.trim() !== '') {
+        songCounts[song] = (songCounts[song] || 0) + 1;
+      }
+    });
+
     // Últimos 10 invitados actualizados
     const recentlyUpdated = guests
       .filter(
@@ -74,6 +90,8 @@ export async function GET(request: NextRequest) {
       busCounts,
       dishCounts,
       allergies,
+      songsReported,
+      songCounts,
       recentlyUpdated,
     };
 
