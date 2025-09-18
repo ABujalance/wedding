@@ -31,17 +31,20 @@ const busDetails: Record<
   Sevilla: {
     departureTime: '11:15',
     returnTimes: ['20:00', '23:30'],
-    pickupLocation: 'Por determinar',
+    pickupLocation:
+      '<ul><li><a href="https://maps.app.goo.gl/2tx6JpBawqcjStmP6">Frente a Santa Justa</a></li><li><a href="https://maps.app.goo.gl/fwHAHTnqKwvgh9ao8">Rectorado Prado</a></li><li><a href="https://maps.app.goo.gl/JHp2MNoSmPNwvFku9">Centro comercial WAY</a></li></ul>',
   },
   Lucena: {
     departureTime: '10:00',
     returnTimes: ['23:30'],
-    pickupLocation: 'Por determinar',
+    pickupLocation:
+      '<ul><li><a href="https://maps.app.goo.gl/fNQqSWPFCUdeNmZR7">Iglesia Nuestra señora de El Rocío</a></li></ul>',
   },
   Huelva: {
     departureTime: '10:30',
     returnTimes: ['23:30'],
-    pickupLocation: 'Por determinar',
+    pickupLocation:
+      '<ul><li><a href="https://maps.app.goo.gl/ycHa5qgKLLXJsCUk8">Esquina estación autobuses Lucena</a></li></ul>',
   },
 };
 
@@ -467,7 +470,11 @@ export const BusInfo: FC<BusInfoProps> = ({ guests }) => {
                           sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                         >
                           <LocationOnIcon
-                            sx={{ fontSize: 14, color: '#5D4037' }}
+                            sx={{
+                              fontSize: 14,
+                              color: '#5D4037',
+                              alignSelf: 'flex-start',
+                            }}
                           />
                           <Typography
                             variant="body2"
@@ -477,7 +484,21 @@ export const BusInfo: FC<BusInfoProps> = ({ guests }) => {
                               fontSize: '0.85rem',
                             }}
                           >
-                            {busInfo.pickupLocation}
+                            <Box
+                              component="span"
+                              sx={{
+                                '& a': {
+                                  color: '#3E2723',
+                                  textDecoration: 'underline',
+                                },
+                                '& ul': {
+                                  margin: 0,
+                                },
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html: busInfo.pickupLocation,
+                              }}
+                            />
                           </Typography>
                         </Box>
                       </Box>
