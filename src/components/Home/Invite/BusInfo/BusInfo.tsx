@@ -37,14 +37,15 @@ const busDetails: Record<
   Lucena: {
     departureTime: '10:00',
     returnTimes: ['23:30'],
+
     pickupLocation:
-      '<ul><li><a href="https://maps.app.goo.gl/fNQqSWPFCUdeNmZR7">Iglesia Nuestra señora de El Rocío</a></li></ul>',
+      '<ul><li><a href="https://maps.app.goo.gl/ycHa5qgKLLXJsCUk8">Esquina estación autobuses Lucena</a></li></ul>',
   },
   Huelva: {
     departureTime: '10:30',
     returnTimes: ['23:30'],
     pickupLocation:
-      '<ul><li><a href="https://maps.app.goo.gl/ycHa5qgKLLXJsCUk8">Esquina estación autobuses Lucena</a></li></ul>',
+      '<ul><li><a href="https://maps.app.goo.gl/fNQqSWPFCUdeNmZR7">Iglesia Nuestra señora de El Rocío</a></li></ul>',
   },
 };
 
